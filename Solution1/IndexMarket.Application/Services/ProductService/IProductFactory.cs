@@ -1,0 +1,10 @@
+﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Domain.Entities;
+
+namespace IndexMarket.Application.Services;
+public interface IProductFactory
+{
+    ProductDto MapToProductDto(Product product);
+    Product MapToProduct(ProductForCreationDto productForCreationDto);
+    void MapToProduct(Product storageProduct, ProductForModificationDto productForModificationDto);
+}
