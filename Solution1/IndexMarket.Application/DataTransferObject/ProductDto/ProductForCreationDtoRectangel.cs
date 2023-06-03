@@ -7,5 +7,5 @@ public record ProductForCreationDtoRectangel(
     double Height,
     double Weight,
     int Depth,
-    string category,
-    string shape);
+    Guid Category_Id,
+    Guid Shape_Id);
