@@ -6,20 +6,24 @@ public class ProductCreationValidator : AbstractValidator<ProductForCreationDto>
 {
     public ProductCreationValidator()
     {
-        RuleFor(p => p)
-            .NotNull();
-
         RuleFor(p => p.Price)
-            .NotEqual(default(decimal)).WithMessage("Price cannot be null !");
+            .NotEqual(default(decimal));
 
         RuleFor(p => p.Amount)
-            .NotEqual(default(int)).WithMessage("Amount cannot be null !");
-
-        RuleFor(p => p.Frame)
-            .NotEmpty().WithMessage("Frame cannot be empty !")
-            .MaximumLength(100).WithMessage("Length should not exceed 100 !");
+            .NotEqual(default(int));
 
         RuleFor(p => p.Height)
-            .NotEqual(default(double)).WithMessage("Height cannot be null !");
+            .NotEqual(default(double));
+
+        RuleFor(p => p.Depth)
+            .NotEqual(default(int));
+
+        RuleFor(p => p.category)
+            .NotEmpty()
+            .WithMessage("Category cannot empty !");
+
+        RuleFor(p => p.shape)
+            .NotEmpty()
+            .WithMessage("ProductShape cannot empty !");
     }
 }
