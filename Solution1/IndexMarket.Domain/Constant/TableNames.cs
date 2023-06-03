@@ -10,5 +10,6 @@
         public static string Address = "Addresses";
         public static string UserRoles = "UserRoles";
         public static string ProductType = "ProductTypes";
+        public static string ProductShape = "ProductShapes";
     }
 }
