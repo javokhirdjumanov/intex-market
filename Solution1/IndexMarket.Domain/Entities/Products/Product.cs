@@ -18,7 +18,7 @@ public class Product : AudiTable
     public Guid Shape_Id { get; set; }
     public ProductShape ProductShape { get; set; }
 
-    public ICollection<Order> Orders { get; set; }
+    public ICollection<Order>? Orders { get; set; }
 
     //public ProductType Type { get; set; }
     public void ProductNotAvailable() => Status = ProductStatus.Not_Available; // mavjud Emas
