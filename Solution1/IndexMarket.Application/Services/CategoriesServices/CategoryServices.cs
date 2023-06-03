@@ -1,19 +1,24 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Domain;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Context;
 using IndexMarket.Infrastructure.Repository;
-using System.Diagnostics;
-using System.Text.Json;
+using System.Security.Cryptography.X509Certificates;
 
 namespace IndexMarket.Application.Services;
 public partial class CategoryServices : ICategoryServices
 {
+    private readonly IProductShapeRepository productShapeRepository;
     private readonly ICategoryRepository categoryRepository;
     private readonly AppDbContext context;
-    public CategoryServices(ICategoryRepository categoryRepository, AppDbContext context)
+    public CategoryServices(
+        ICategoryRepository categoryRepository,
+        AppDbContext context,
+        IProductShapeRepository productShapeRepository)
     {
         this.categoryRepository = categoryRepository;
         this.context = context;
+        this.productShapeRepository = productShapeRepository;
     }
 
     public async ValueTask<CategoryDto> CreateCategoryAysnc(string categoryName)
@@ -22,7 +27,7 @@ public partial class CategoryServices : ICategoryServices
 
         var addedCategory = await this.categoryRepository.InsertAsync(new Category { Title = categoryName });
 
-        return new CategoryDto(addedCategory.Id, addedCategory.Title);
+        return new CategoryDto(addedCategory.Id, addedCategory.Title); ;
     }
 
     public IQueryable<CategoryDto> RetrieveCategories()
@@ -32,15 +37,41 @@ public partial class CategoryServices : ICategoryServices
         return categories.Select(x => new CategoryDto(x.Id, x.Title));
     }
 
-    public async ValueTask<CategoryDto> RetrieveCategoryByIdAsync(Guid categoryId)
+    public async ValueTask<CategoryDtoWithProducts> RetrieveCategoryByIdWithProductsAsync(Guid categoryId)
     {
         ValidationCategoryId(categoryId);
 
-        var storageCategory = await this.categoryRepository.SelectByIdAsync(categoryId);
+        var storageCategory = await this.categoryRepository.SelectByIdWithDetailsAsync(
+            expression: category => category.Id == categoryId,
+            includes: new string[] { nameof(Category.Products) });
+
+        var products = storageCategory.Products.Select(p => p).ToList();
 
         ValidationStorageCategory(storageCategory, categoryId);
 
-        return new CategoryDto(storageCategory.Id, storageCategory.Title);
+        foreach (var item in products)
+        {
+            var shape = await this.productShapeRepository.SelectByIdAsync(item.Shape_Id);
+
+            item.ProductShape = shape;
+        }
+
+        var productDtos = new List<ProductDto>(
+            products.Select(x => new ProductDto(
+                x.Id,
+                x.PhotoLink,
+                x.SalePrice,
+                x.Price,
+                x.Amount,
+                new ProductShapeDto(x.ProductShape.Id, x.ProductShape.Name),
+                x.Height,
+                x.Weight,
+                x.Depth,
+                Enum.GetName(typeof(ProductStatus), x.Status),
+                new CategoryDto(x.Category.Id, x.Category.Title)))
+            );
+
+        return new CategoryDtoWithProducts(productDtos);
     }
 
     public async ValueTask<CategoryDto> ModifyCategoryAsync(CategoryModifyDto categoryModifyDto)

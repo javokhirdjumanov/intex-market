@@ -10,6 +10,14 @@ using System.Text.Json;
 namespace IndexMarket.Application.Services;
 public partial class ProductServices
 {
+    public void ValidationGeneric<TEntity> (TEntity entity)
+    {
+        if(entity == null)
+        {
+            throw new NotFoundException("Don't found object !");
+        }
+    }
+
     public void ValidationProductId(Guid productId)
     {
         if(productId == default)

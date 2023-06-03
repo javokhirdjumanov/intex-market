@@ -18,11 +18,10 @@ public class ProductCreationValidator : AbstractValidator<ProductForCreationDto>
         RuleFor(p => p.Depth)
             .NotEqual(default(int));
 
-        RuleFor(p => p.category)
-            .NotEmpty()
-            .WithMessage("Category cannot empty !");
+        RuleFor(p => p.Category_Id)
+            .NotEqual(default(Guid));
 
-        RuleFor(p => p.shape)
+        RuleFor(p => p.Shape)
             .NotEmpty()
             .WithMessage("ProductShape cannot empty !");
     }
