@@ -8,10 +8,15 @@ public sealed class CategoriesConfiguration : IEntityTypeConfiguration<Category>
 {
     public void Configure(EntityTypeBuilder<Category> builder)
     {
-        builder.ToTable(TableNames.Category);
+        builder
+            .ToTable(TableNames.Category);
 
-        builder.HasKey(c => c.Id);
+        builder
+            .HasKey(c => c.Id);
 
-        builder.HasIndex(c => c.Title).IsUnique(true);
+        builder
+            .Property(c => c.Title)
+            .HasMaxLength(100)
+            .IsRequired(true);
     }
 }

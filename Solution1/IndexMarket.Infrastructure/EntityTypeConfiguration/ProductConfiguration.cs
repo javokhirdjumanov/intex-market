@@ -53,7 +53,7 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
 
         builder
             .HasOne(p => p.ProductShape)
-            .WithMany(psh => psh.Products)
+            .WithMany(sh => sh.Products)
             .HasForeignKey(p => p.Shape_Id)
             .OnDelete(DeleteBehavior.Cascade);
     }

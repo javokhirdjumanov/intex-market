@@ -41,7 +41,7 @@ public sealed class SiteConfiguration : IEntityTypeConfiguration<Site>
             .HasForeignKey<Site>(s => s.Address_Id)
             .OnDelete(DeleteBehavior.Cascade);
 
-        //builder.HasData(Generation());
+        builder.HasData(Generation());
     }
     private List<Site> Generation()
     {
@@ -50,10 +50,10 @@ public sealed class SiteConfiguration : IEntityTypeConfiguration<Site>
             new Site
             {
                 Id = Guid.Parse("ac56836e-0345-4f01-a883-47f39e32e079"),
-                PhoneNumber = "907880021",
-                JobTime = "1-20",
-                TelegrammLink = "t.mejavokhirdjumanov",
-                InstagramLink = "isnta.mejavokhirdjumanov",
+                PhoneNumber = "+998-90-788-00-21",
+                JobTime = "9.AM - 7.PM",
+                TelegrammLink = "t.me//javokhirdjumanov",
+                InstagramLink = "isnta.me//javokhirdjumanov",
                 Address_Id = Guid.Parse("bc56836e-0345-4f01-a883-47f39e32e079")
             }
         };

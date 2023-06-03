@@ -12,6 +12,9 @@ public sealed class ProductShapeConfiguration : IEntityTypeConfiguration<Product
 
         builder.HasKey(p => p.Id);
 
-        builder.HasIndex(p => p.Name).IsUnique(true);
+        builder
+            .Property(c => c.Name)
+            .HasMaxLength(100)
+            .IsRequired(true);
     }
 }

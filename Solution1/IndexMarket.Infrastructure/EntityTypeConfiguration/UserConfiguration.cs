@@ -67,11 +67,11 @@ namespace IndexMarket.Infrastructure.EntityTypeConfiguration
                 new User
                 {
                     Id = Guid.Parse("bc56836e-0345-4f01-a883-47f39e32e079"),
-                    FirstName = "Toxirjon",
+                    FirstName = "Javokhir",
                     Role = UserRoles.Admin,
-                    PhoneNumber = "931234567",
-                    Email = "toxirjon@gmail.com",
-                    PasswordHash = "12345",
+                    PhoneNumber = "+998-90-000-22-11",
+                    Email = "javokhir@gmail.com",
+                    PasswordHash = "0803",
                     Salt = Guid.NewGuid().ToString(),
                     Address_Id = Guid.Parse("bc56836e-0345-4f01-a883-47f39e32e079")
                 }
