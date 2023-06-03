@@ -22,12 +22,11 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired(true);
 
         builder
-            .Property(p => p.Amount)
-            .IsRequired(true);
+            .Property(p => p.SalePrice)
+            .IsRequired(false);
 
         builder
-            .Property(p => p.Frame)
-            .HasMaxLength(100)
+            .Property(p => p.Amount)
             .IsRequired(true);
 
         builder
@@ -39,17 +38,23 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .IsRequired(false);
 
         builder
-            .Property(p => p.CreatedAt)
+            .Property(p => p.Depth)
             .IsRequired(true);
 
         builder
-            .Property(p => p.Type)
+            .Property(p => p.CreatedAt)
             .IsRequired(true);
 
         builder
             .HasOne(p => p.Category)
             .WithMany(c => c.Products)
             .HasForeignKey(p => p.Category_Id)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasOne(p => p.ProductShape)
+            .WithMany(psh => psh.Products)
+            .HasForeignKey(p => p.Shape_Id)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }
