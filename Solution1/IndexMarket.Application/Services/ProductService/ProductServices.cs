@@ -1,4 +1,5 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Context;
 using IndexMarket.Infrastructure.Repository;
 
@@ -8,25 +9,44 @@ public partial class ProductServices : IProductServices
     private readonly AppDbContext appDbContext;
     private readonly IProductRepository productRepository;
     private readonly IProductFactory productFactory;
+    private readonly ICategoryRepository categoryRepository;
+    private readonly IProductShapeRepository productShapeRepository;
     public ProductServices(
         AppDbContext appDbContext,
         IProductRepository productRepository,
-        IProductFactory productFactory)
+        IProductFactory productFactory,
+        ICategoryRepository categoryRepository,
+        IProductShapeRepository productShapeRepository)
     {
         this.appDbContext = appDbContext;
         this.productRepository = productRepository;
         this.productFactory = productFactory;
+        this.categoryRepository = categoryRepository;
+        this.productShapeRepository = productShapeRepository;
     }
 
-    public async ValueTask<ProductDto> CreateProductAsync(ProductForCreationDto productCreationDto)
+    public async ValueTask<ProductDto> CreateCircleProductAsync(ProductForCreationDto productCreationDto)
     {
         ValidateCreationProductDto(productCreationDto);
 
-        var newProduct = this.productFactory.MapToProduct(productCreationDto);
+        Category? maybeCategory = await this.categoryRepository
+            .GetCategoryByNameAsync(productCreationDto.category);
 
-        var addedProduct = await this.productRepository.InsertAsync(newProduct);
+        ProductShape? maybeProductShape = await this.productShapeRepository
+            .GetShapeByNameAsync(productCreationDto.shape);
 
-        return this.productFactory.MapToProductDto(addedProduct);
+        var newProduct = this.productFactory.MapToProduct(productCreationDto, maybeCategory, maybeProductShape);
+
+        var storageProduct = await this.productRepository.InsertAsync(newProduct);
+
+
+        return this.productFactory.MapToProductDto(storageProduct);
+
+    }
+
+    public ValueTask<ProductDto> CreateRectangelProductAsync(ProductForCreationDtoRectangel productForCreationDtoRectangel)
+    {
+        throw new NotImplementedException();
     }
 
     public IQueryable<ProductDto> RetrieveProducts()

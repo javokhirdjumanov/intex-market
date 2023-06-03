@@ -1,33 +1,62 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Domain;
 using IndexMarket.Domain.Entities;
-using IndexMarket.Domain.Enums;
+using IndexMarket.Infrastructure.Repository;
 
 namespace IndexMarket.Application.Services;
 public class ProductFactory : IProductFactory
 {
-    public Product MapToProduct(ProductForCreationDto productForCreationDto)
+    public Product MapToProduct(
+        ProductForCreationDto productForCreationDto,
+        Category? maybeCategory,
+        ProductShape? maybeShape)
     {
-        double? tempWeight = productForCreationDto.Weight;
+        decimal? sale = productForCreationDto.SalePrice;
 
-        var type = ProductType.Ramkali;
-        if (tempWeight == null)
+        var status = ProductStatus.Not_Available;
+
+        if (sale == default(decimal))
+            status = ProductStatus.Recommended;
+        else
+            status = ProductStatus.Discount;
+
+        var tempCategory = new Category();
+        if(maybeCategory is not null)
         {
-            type = ProductType.Shishirilgan;
+            tempCategory.Id = maybeCategory.Id;
+            tempCategory.Title = maybeCategory.Title;
+            tempCategory.CreatedAt = maybeCategory.CreatedAt;
+            tempCategory.UpdatedAt = maybeCategory.UpdatedAt;
+            tempCategory.Products = new List<Product>(maybeCategory.Products);
+        }
+        else
+        {
+            tempCategory.Title = productForCreationDto.category;
+        }
+
+        var tempShape = new ProductShape();
+        if(maybeShape is not null)
+        {
+            tempShape.Id = maybeShape.Id;
+            tempShape.Name = maybeShape.Name;
+            tempShape.Products = new List<Product>(maybeShape.Products);
+        }
+        else
+        {
+            tempShape.Name = productForCreationDto.shape;
         }
 
         return new Product
         {
             PhotoLink = productForCreationDto.PhotoLink,
+            SalePrice = sale,
             Price = productForCreationDto.Price,
             Amount = productForCreationDto.Amount,
-            Frame = productForCreationDto.Frame,
             Height = productForCreationDto.Height,
-            Weight = tempWeight,
-            Category = new Category
-            {
-                Title = Enum.GetName(typeof(ProductType), type)
-            },
-            Type = type
+            Depth = productForCreationDto.Depth,
+            Status = status,
+            Category = tempCategory,
+            ProductShape = tempShape
         };
     }
 
@@ -35,19 +64,8 @@ public class ProductFactory : IProductFactory
     {
         throw new NotImplementedException();
     }
-
     public ProductDto MapToProductDto(Product product)
     {
-        var category = new CategoryDto(id: product.Category.Id, Title: product.Category.Title);
-
-        return new ProductDto(
-            PhotoLink: product.PhotoLink,
-            Price: product.Price,
-            Amount: product.Amount,
-            Frame: product.Frame,
-            Height: product.Height,
-            Weight: product.Weight,
-            Category: category,
-            ProductType: category.Title);
+        return null;
     }
 }
