@@ -7,19 +7,24 @@ public class ProductCreationValidator : AbstractValidator<ProductForCreationDto>
     public ProductCreationValidator()
     {
         RuleFor(p => p.Price)
-            .NotEqual(default(decimal));
+            .NotEqual(null)
+            .WithMessage("Price cannot null !");
 
         RuleFor(p => p.Amount)
-            .NotEqual(default(int));
+            .NotEqual(null)
+            .WithMessage("Amount cannot null !");
 
         RuleFor(p => p.Height)
-            .NotEqual(default(double));
+            .NotEqual(null)
+            .WithMessage("Height cannot null !");
 
         RuleFor(p => p.Depth)
-            .NotEqual(default(int));
+            .NotEqual(null)
+            .WithMessage("Depth cannot null !");
 
         RuleFor(p => p.Category_Id)
-            .NotEqual(default(Guid));
+            .NotEqual(default(Guid))
+            .WithMessage("Category cannot default Guid !");
 
         RuleFor(p => p.Shape)
             .NotEmpty()
