@@ -16,7 +16,7 @@ public class SiteController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpGet]
+    [HttpGet("All")]
     public IActionResult GetSites()
     {
         var site = this.siteServices.RetrieveSites();
