@@ -12,11 +12,4 @@ public class ProductShapeRepository
     {
         this.appDbContext = appDbContext;
     }
-
-    public async Task<ProductShape> GetShapeByNameAsync(string shapeName)
-    {
-        return await this.appDbContext
-            .Set<ProductShape>()
-            .FirstOrDefaultAsync(x => x.Name == shapeName);
-    }
 }
