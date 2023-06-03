@@ -5,5 +5,5 @@ public class Category : AudiTable
 {
     public string Title { get; set; }
 
-    public ICollection<Product> Products { get; set; }
+    public ICollection<Product>? Products { get; set; }
 }
