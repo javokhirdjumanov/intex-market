@@ -24,7 +24,7 @@ public class CategoryController : ControllerBase
         return Created("", newCategory);
     }
 
-    [HttpGet]
+    [HttpGet("All")]
     public IActionResult GetCategories()
     {
         var categories = this.categoryServices.RetrieveCategories();
@@ -32,10 +32,10 @@ public class CategoryController : ControllerBase
         return Ok(categories);
     }
 
-    [HttpGet("{categoryId:guid}")]
-    public async ValueTask<ActionResult<CategoryDto>> GetCategoryByIdAsync(Guid categoryId)
+    [HttpGet("Products/{categoryId:guid}")]
+    public async ValueTask<ActionResult<CategoryDtoWithProducts>> GetCategoryByIdAsync(Guid categoryId)
     {
-        var category = await this.categoryServices.RetrieveCategoryByIdAsync(categoryId);
+        var category = await this.categoryServices.RetrieveCategoryByIdWithProductsAsync(categoryId);
 
         return Ok(category);
     }

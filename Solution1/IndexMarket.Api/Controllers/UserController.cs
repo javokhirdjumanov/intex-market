@@ -28,7 +28,7 @@ namespace IndexMarket.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        [HttpGet("All")]
         public IActionResult GetAllUsers()
         {
             var users = this.userServices.RetrieveUsers();
