@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace IndexMarket.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230602064949_Initi")]
-    partial class Initi
+    [Migration("20230603052209_Addsd")]
+    partial class Addsd
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -74,13 +74,15 @@ namespace IndexMarket.Infrastructure.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Title")
+                        .IsUnique();
 
                     b.ToTable("Categories", (string)null);
                 });
@@ -127,10 +129,8 @@ namespace IndexMarket.Infrastructure.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Frame")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int>("Depth")
+                        .HasColumnType("int");
 
                     b.Property<double>("Height")
                         .HasColumnType("float");
@@ -142,7 +142,13 @@ namespace IndexMarket.Infrastructure.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<int>("Type")
+                    b.Property<decimal?>("SalePrice")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<Guid>("Shape_Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -155,7 +161,27 @@ namespace IndexMarket.Infrastructure.Migrations
 
                     b.HasIndex("Category_Id");
 
+                    b.HasIndex("Shape_Id");
+
                     b.ToTable("Products", (string)null);
+                });
+
+            modelBuilder.Entity("IndexMarket.Domain.Entities.ProductShape", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
+
+                    b.ToTable("ProductShapes", (string)null);
                 });
 
             modelBuilder.Entity("IndexMarket.Domain.Entities.Site", b =>
@@ -266,13 +292,13 @@ namespace IndexMarket.Infrastructure.Migrations
                         {
                             Id = new Guid("bc56836e-0345-4f01-a883-47f39e32e079"),
                             Address_Id = new Guid("bc56836e-0345-4f01-a883-47f39e32e079"),
-                            CreatedAt = new DateTime(2023, 6, 2, 6, 49, 48, 864, DateTimeKind.Utc).AddTicks(2137),
+                            CreatedAt = new DateTime(2023, 6, 3, 5, 22, 9, 418, DateTimeKind.Utc).AddTicks(599),
                             Email = "toxirjon@gmail.com",
                             FirstName = "Toxirjon",
                             PasswordHash = "12345",
                             PhoneNumber = "931234567",
                             Role = 1,
-                            Salt = "fb4109b3-f853-439c-b06b-d5dc4e991512"
+                            Salt = "4295a9c7-1394-4a0f-9783-c39bc013c06b"
                         });
                 });
 
@@ -303,7 +329,15 @@ namespace IndexMarket.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("IndexMarket.Domain.Entities.ProductShape", "ProductShape")
+                        .WithMany("Products")
+                        .HasForeignKey("Shape_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Category");
+
+                    b.Navigation("ProductShape");
                 });
 
             modelBuilder.Entity("IndexMarket.Domain.Entities.Site", b =>
@@ -336,6 +370,11 @@ namespace IndexMarket.Infrastructure.Migrations
             modelBuilder.Entity("IndexMarket.Domain.Entities.Product", b =>
                 {
                     b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("IndexMarket.Domain.Entities.ProductShape", b =>
+                {
+                    b.Navigation("Products");
                 });
 
             modelBuilder.Entity("IndexMarket.Domain.Entities.User", b =>
