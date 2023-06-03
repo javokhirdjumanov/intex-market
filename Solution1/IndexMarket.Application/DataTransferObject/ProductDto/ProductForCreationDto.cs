@@ -6,5 +6,5 @@ public record ProductForCreationDto(
     int Amount,
     double Height,
     int Depth,
-    string category,
-    string shape);
+    Guid Category_Id,
+    string Shape);

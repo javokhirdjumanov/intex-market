@@ -2,13 +2,14 @@
 
 namespace IndexMarket.Application.DataTransferObject;
 public record ProductDto(
+    Guid productId,
     string? PhotoLink,
-    decimal? OldPrice,
-    decimal NewPrice,
+    decimal? SalePrice,
+    decimal Price,
     int Amount,
-    string Shape,
+    ProductShapeDto? Shape,
     double Height,
     double? Weight,
     int Depth,
     string Status,
-    CategoryDto Category);
+    CategoryDto? Category);
