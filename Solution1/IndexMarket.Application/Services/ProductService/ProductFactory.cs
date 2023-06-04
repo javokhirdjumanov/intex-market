@@ -5,35 +5,54 @@ using IndexMarket.Domain.Entities;
 namespace IndexMarket.Application.Services;
 public class ProductFactory : IProductFactory
 {
-    public Product MapToProduct(ProductForCreationDto productForCreationDto, Category maybeCategory)
+    public Product MapToProduct(
+        ProductForCreationDto productForCreationDto,
+        Category maybeCategory,
+        ProductShape productShape)
     {
-        var product = new Product();
-
-        decimal? sale = productForCreationDto.SalePrice;
-
-        product.PhotoLink = productForCreationDto.PhotoLink;
-        product.SalePrice = sale;
-        product.Price = productForCreationDto.Price;
-        product.Amount = productForCreationDto.Amount;
-        product.Height = productForCreationDto.Height;
-        product.Depth = productForCreationDto.Depth;
-        product.Category = maybeCategory;
-
-        product.Status = (sale == null) 
-            ? ProductStatus.Recommended 
-            : ProductStatus.Discount;
-        
-        product.ProductShape = new ProductShape
+        return new Product
         {
-            Name = productForCreationDto.Shape
+            PhotoLink = productForCreationDto.PhotoLink,
+            SalePrice = productForCreationDto.SalePrice,
+            Status = (productForCreationDto.SalePrice == null)
+                ? ProductStatus.Recommended
+                : ProductStatus.Discount,
+            Price = productForCreationDto.Price,
+            Amount = productForCreationDto.Amount,
+            Height = productForCreationDto.Height,
+            Depth = productForCreationDto.Depth,
+            Category = maybeCategory,
+            ProductShape = productShape
         };
-
-        return product;
     }
+
+    public Product MapToProduct(
+        ProductForCreationDtoRectangel productForCreationDtoRectangel,
+        Category category,
+        ProductShape productShape)
+    {
+        return new Product
+        {
+            PhotoLink = productForCreationDtoRectangel.PhotoLink,
+            SalePrice = productForCreationDtoRectangel.SalePrice,
+            Status = (productForCreationDtoRectangel.SalePrice == null) 
+                ? ProductStatus.Recommended 
+                : ProductStatus.Discount,
+            Price = productForCreationDtoRectangel.Price,
+            Amount = productForCreationDtoRectangel.Amount,
+            Height = productForCreationDtoRectangel.Height,
+            Weight = productForCreationDtoRectangel.Weight,
+            Depth = productForCreationDtoRectangel.Depth,
+            Category = category,
+            ProductShape = productShape
+        };
+    }
+
     public void MapToProduct(Product storageProduct, ProductForModificationDto productForModificationDto)
     {
         throw new NotImplementedException();
     }
+
     public ProductDto MapToProductDto(Product product)
     {
         ProductShapeDto? productShape = default;

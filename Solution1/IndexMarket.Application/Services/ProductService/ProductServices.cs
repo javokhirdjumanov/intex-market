@@ -10,16 +10,19 @@ public partial class ProductServices : IProductServices
     private readonly IProductRepository productRepository;
     private readonly IProductFactory productFactory;
     private readonly ICategoryRepository categoryRepository;
+    private readonly IProductShapeRepository productShapeRepository;
     public ProductServices(
         AppDbContext appDbContext,
         IProductRepository productRepository,
         IProductFactory productFactory,
-        ICategoryRepository categoryRepository)
+        ICategoryRepository categoryRepository,
+        IProductShapeRepository productShapeRepository)
     {
         this.appDbContext = appDbContext;
         this.productRepository = productRepository;
         this.productFactory = productFactory;
         this.categoryRepository = categoryRepository;
+        this.productShapeRepository = productShapeRepository;
     }
 
     public async ValueTask<ProductDto> CreateProductAsync(ProductForCreationDto productCreationDto)
@@ -30,16 +33,39 @@ public partial class ProductServices : IProductServices
 
         ValidationGeneric<Category>(maybeCategory);
 
-        var newProduct = this.productFactory.MapToProduct(productCreationDto, maybeCategory);
+        ProductShape? productShape = await this.productShapeRepository.SelectByIdAsync(productCreationDto.Shape_Id);
+        
+        ValidationGeneric<ProductShape>(productShape);
+        ValidationNotRectangel(productShape);
+
+        var newProduct = this.productFactory.MapToProduct(productCreationDto, maybeCategory, productShape);
 
         var storageProduct = await this.productRepository.InsertAsync(newProduct);
 
         return this.productFactory.MapToProductDto(storageProduct);
     }
 
-    public ValueTask<ProductDto> CreateRectangelProductAsync(ProductForCreationDtoRectangel productForCreationDtoRectangel)
+    public async ValueTask<ProductDto> CreateRectangelProductAsync(
+        ProductForCreationDtoRectangel productForCreationDtoRectangel)
     {
-        throw new NotImplementedException();
+        ValidationCreationRectangleProductDto(productForCreationDtoRectangel);
+
+        Category? maybeCategory = await this.categoryRepository
+            .SelectByIdAsync(productForCreationDtoRectangel.Category_Id);
+            
+        ValidationGeneric<Category>(maybeCategory);
+
+        ProductShape? maybeShape = await this.productShapeRepository
+            .SelectByIdAsync(productForCreationDtoRectangel.Shape_Id);
+
+        ValidationGeneric<ProductShape>(maybeShape);
+        ValidationRectangel(maybeShape);
+
+        var newProduct = this.productFactory.MapToProduct(productForCreationDtoRectangel, maybeCategory, maybeShape);
+
+        var storageProduct = await this.productRepository.InsertAsync(newProduct);
+
+        return this.productFactory.MapToProductDto(storageProduct);
     }
 
     public IQueryable<ProductDto> RetrieveProducts()
