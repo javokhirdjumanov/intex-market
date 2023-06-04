@@ -6,6 +6,10 @@ public class ProductModificationValidator : AbstractValidator<ProductForModifica
 {
     public ProductModificationValidator()
     {
-        
+        RuleFor(p => p)
+            .NotNull().WithMessage("Product cannot null !");
+
+        RuleFor(p => p.Product_Id)
+            .NotEqual(default(Guid));
     }
 }

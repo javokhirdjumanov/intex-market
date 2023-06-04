@@ -10,8 +10,4 @@
     <ProjectReference Include="..\IndexMarket.Infrastructure\IndexMarket.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Services\AddressServices\" />
-  </ItemGroup>
-
 </Project>
