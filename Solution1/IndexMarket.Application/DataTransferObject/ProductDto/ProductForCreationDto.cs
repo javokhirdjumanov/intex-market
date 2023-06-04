@@ -7,4 +7,4 @@ public record ProductForCreationDto(
     double Height,
     int Depth,
     Guid Category_Id,
-    string Shape);
+    Guid Shape_Id);
