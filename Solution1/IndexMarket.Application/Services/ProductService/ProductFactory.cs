@@ -48,9 +48,25 @@ public class ProductFactory : IProductFactory
         };
     }
 
-    public void MapToProduct(Product storageProduct, ProductForModificationDto productForModificationDto)
+    public void MapToProduct(
+        Product storageProduct,
+        ProductForModificationDto productForModificationDto)
     {
-        throw new NotImplementedException();
+        storageProduct.PhotoLink = productForModificationDto.PhotoLink ?? storageProduct.PhotoLink;
+        storageProduct.Price = productForModificationDto.Price ?? storageProduct.Price;
+        storageProduct.Amount = productForModificationDto.Amount ?? storageProduct.Amount;
+        storageProduct.Height = productForModificationDto.Height ?? storageProduct.Height;
+
+        if(storageProduct.ProductShape.Name == Shapes.Rectangle)
+            storageProduct.Weight = productForModificationDto.Weight ?? storageProduct.Weight;
+
+        if(productForModificationDto.SalePrice != null && productForModificationDto.SalePrice > 0)
+            storageProduct.Status = ProductStatus.Discount;
+
+        if (productForModificationDto.SalePrice == 0)
+            storageProduct.Status = ProductStatus.Recommended;
+
+        storageProduct.Depth = productForModificationDto.Depth ?? storageProduct.Depth;
     }
 
     public ProductDto MapToProductDto(Product product)

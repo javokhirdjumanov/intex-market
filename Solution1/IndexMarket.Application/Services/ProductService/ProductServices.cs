@@ -89,10 +89,23 @@ public partial class ProductServices : IProductServices
         return this.productFactory.MapToProductDto(storageProduct);
     }
 
-    // not emplement
-    public ValueTask<ProductDto> ModifyProductAsync(ProductForModificationDto productForModificationDto)
+    public async ValueTask<ProductDto> ModifyProductAsync(ProductForModificationDto productForModificationDto)
     {
-        throw new NotImplementedException();
+        ValidateModificationProductDto(productForModificationDto);
+
+        ValidationProductId(productForModificationDto.Product_Id);
+
+        Product? storageProduct = await this.productRepository.SelectByIdWithDetailsAsync(
+            expression: p => p.Id == productForModificationDto.Product_Id,
+            includes: new string[] { nameof(Product.Category), nameof(Product.ProductShape) });
+
+        ValidationStorageProduct(storageProduct, productForModificationDto.Product_Id);
+
+        this.productFactory.MapToProduct(storageProduct, productForModificationDto);
+
+        var modifyProduct = await this.productRepository.UpdateAsync(storageProduct);
+
+        return this.productFactory.MapToProductDto(modifyProduct);
     }
 
     public async ValueTask<ProductDto> RemoveProductAsync(Guid productId)
