@@ -11,23 +11,19 @@ public class ProductCreationValidatorForRectangel : AbstractValidator<ProductFor
             .WithMessage("Object not null !");
 
         RuleFor(c => c.Price)
-            .NotEqual(null)
+            .NotEmpty()
             .WithMessage("Price cannot be null !");
 
-        RuleFor(c => c.Amount)
-            .NotEqual(null)
+        RuleFor(c => c.Amount).NotEmpty()
             .WithMessage("Amount cannot be null !");
 
-        RuleFor(c => c.Height)
-            .NotEqual(null)
+        RuleFor(c => c.Height).NotEmpty()
             .WithMessage("Height cannot be null !");
 
-        RuleFor(c => c.Weight)
-            .NotEqual(null)
+        RuleFor(c => c.Weight).NotEmpty()
             .WithMessage("Weight cannot be null !");
 
-        RuleFor(c => c.Depth)
-            .NotEqual(null)
+        RuleFor(c => c.Depth).NotEmpty()
             .WithMessage("Depth cannot be null !");
 
         RuleFor(c => c.Category_Id)
