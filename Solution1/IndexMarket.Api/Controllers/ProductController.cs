@@ -24,6 +24,15 @@ public class ProductController : ControllerBase
         return Created("", product);
     }
 
+    [HttpPost("Rectangel")]
+    public async ValueTask<ActionResult<ProductDto>> PostProductRectangelAsync(
+        ProductForCreationDtoRectangel productForCreationDtoRectangel)
+    {
+        var product = await this.productServices.CreateRectangelProductAsync(productForCreationDtoRectangel);
+
+        return Created("", product); 
+    }
+
     [HttpGet("All")]
     public IActionResult GetAllProducts()
     {
