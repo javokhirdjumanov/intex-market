@@ -49,6 +49,14 @@ public class ProductController : ControllerBase
         return Ok(product);
     }
 
+    [HttpPut]
+    public async ValueTask<ActionResult<ProductDto>> PutProductAsync(ProductForModificationDto productForModificationDto)
+    {
+        var modifyProduct = await this.productServices.ModifyProductAsync(productForModificationDto);
+
+        return Ok(modifyProduct);
+    }
+
     [HttpDelete("{productId:guid}")]
     public async ValueTask<ActionResult<ProductDto>> DeleteProductAsync(Guid productId)
     {
