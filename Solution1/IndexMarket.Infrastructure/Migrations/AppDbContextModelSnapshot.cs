@@ -51,13 +51,6 @@ namespace IndexMarket.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Addresses", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("bc56836e-0345-4f01-a883-47f39e32e079"),
-                            Country = "Uzbekistan"
-                        });
                 });
 
             modelBuilder.Entity("IndexMarket.Domain.Entities.Category", b =>
@@ -80,6 +73,23 @@ namespace IndexMarket.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories", (string)null);
+                });
+
+            modelBuilder.Entity("IndexMarket.Domain.Entities.Consultation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("Order_Id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Order_Id")
+                        .IsUnique();
+
+                    b.ToTable("Consultations", (string)null);
                 });
 
             modelBuilder.Entity("IndexMarket.Domain.Entities.Order", b =>
@@ -218,18 +228,6 @@ namespace IndexMarket.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Sites", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("ac56836e-0345-4f01-a883-47f39e32e079"),
-                            Address_Id = new Guid("bc56836e-0345-4f01-a883-47f39e32e079"),
-                            CreatedAt = new DateTime(2023, 6, 3, 11, 26, 48, 188, DateTimeKind.Utc).AddTicks(4662),
-                            InstagramLink = "isnta.me//javokhirdjumanov",
-                            JobTime = "9.AM - 7.PM",
-                            PhoneNumber = "+998-90-788-00-21",
-                            TelegrammLink = "t.me//javokhirdjumanov"
-                        });
                 });
 
             modelBuilder.Entity("IndexMarket.Domain.Entities.User", b =>
@@ -291,20 +289,17 @@ namespace IndexMarket.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("Users", (string)null);
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("bc56836e-0345-4f01-a883-47f39e32e079"),
-                            Address_Id = new Guid("bc56836e-0345-4f01-a883-47f39e32e079"),
-                            CreatedAt = new DateTime(2023, 6, 3, 11, 26, 48, 189, DateTimeKind.Utc).AddTicks(1482),
-                            Email = "javokhir@gmail.com",
-                            FirstName = "Javokhir",
-                            PasswordHash = "0803",
-                            PhoneNumber = "+998-90-000-22-11",
-                            Role = 1,
-                            Salt = "3517d44c-3716-4f4c-9615-a2b603dea66b"
-                        });
+            modelBuilder.Entity("IndexMarket.Domain.Entities.Consultation", b =>
+                {
+                    b.HasOne("IndexMarket.Domain.Entities.Order", "Order")
+                        .WithOne()
+                        .HasForeignKey("IndexMarket.Domain.Entities.Consultation", "Order_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("IndexMarket.Domain.Entities.Order", b =>

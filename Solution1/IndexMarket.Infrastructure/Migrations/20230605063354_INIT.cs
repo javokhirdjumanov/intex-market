@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IndexMarket.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Addsd : Migration
+    public partial class INIT : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -32,7 +32,7 @@ namespace IndexMarket.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
@@ -46,7 +46,7 @@ namespace IndexMarket.Infrastructure.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -168,20 +168,28 @@ namespace IndexMarket.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "Addresses",
-                columns: new[] { "Id", "City", "Country", "PostalCode", "Region", "Street" },
-                values: new object[] { new Guid("bc56836e-0345-4f01-a883-47f39e32e079"), null, "Uzbekistan", null, null, null });
-
-            migrationBuilder.InsertData(
-                table: "Users",
-                columns: new[] { "Id", "Address_Id", "CreatedAt", "Email", "FirstName", "LastName", "PasswordHash", "PhoneNumber", "RefreshToken", "RefreshTokenExpireDate", "Role", "Salt", "UpdatedAt" },
-                values: new object[] { new Guid("bc56836e-0345-4f01-a883-47f39e32e079"), new Guid("bc56836e-0345-4f01-a883-47f39e32e079"), new DateTime(2023, 6, 3, 5, 22, 9, 418, DateTimeKind.Utc).AddTicks(599), "toxirjon@gmail.com", "Toxirjon", null, "12345", "931234567", null, null, 1, "4295a9c7-1394-4a0f-9783-c39bc013c06b", null });
+            migrationBuilder.CreateTable(
+                name: "Consultations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Order_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Consultations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Consultations_Orders_Order_Id",
+                        column: x => x.Order_Id,
+                        principalTable: "Orders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categories_Title",
-                table: "Categories",
-                column: "Title",
+                name: "IX_Consultations_Order_Id",
+                table: "Consultations",
+                column: "Order_Id",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -205,12 +213,6 @@ namespace IndexMarket.Infrastructure.Migrations
                 column: "Shape_Id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductShapes_Name",
-                table: "ProductShapes",
-                column: "Name",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Sites_Address_Id",
                 table: "Sites",
                 column: "Address_Id",
@@ -227,10 +229,13 @@ namespace IndexMarket.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Orders");
+                name: "Consultations");
 
             migrationBuilder.DropTable(
                 name: "Sites");
+
+            migrationBuilder.DropTable(
+                name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Products");
