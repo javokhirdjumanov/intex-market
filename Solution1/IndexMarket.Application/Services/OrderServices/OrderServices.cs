@@ -12,18 +12,21 @@ public partial class OrderServices : IOrderServices
     private readonly IProductRepository productRepository;
     private readonly IUserRepository userRepository;
     private readonly IAddressRepository addressRepository;
+    private readonly IConsultationRepository consultationRepository;
     public OrderServices(
         IOrderRepository orderRepository,
         IProductRepository productRepository,
         IUserRepository userRepository,
         IAddressRepository addressRepository,
-        IOrderFactory orderFactory)
+        IOrderFactory orderFactory,
+        IConsultationRepository consultationRepository)
     {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
         this.userRepository = userRepository;
         this.addressRepository = addressRepository;
         this.orderFactory = orderFactory;
+        this.consultationRepository = consultationRepository;
     }
 
     public async ValueTask<OrderDto> CreateOrderAsync(OrderCreationDto orderCreationDto)
@@ -57,6 +60,13 @@ public partial class OrderServices : IOrderServices
         };
 
         var newOrder = await this.orderRepository.InsertAsync(order);
+
+        var newConsultation = await this.consultationRepository
+            .InsertAsync(
+            new Consultation
+            { 
+                Order = newOrder
+            });
 
         return this.orderFactory.MapToOrderDto(newOrder);
     }
