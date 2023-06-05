@@ -76,6 +76,7 @@ public static class ServicesExtentions
         services.AddTransient<ISitesRepository, SitesRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IConsultationRepository, ConsultationRepository>();
+        services.AddScoped<IFileRepository, FileRepository>();
 
         services.AddTransient<IJwtTokenHandler, JwtTokenHandler>();
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
@@ -101,6 +102,8 @@ public static class ServicesExtentions
         services.AddScoped<IProductShapeService, ProductShapeService>();
 
         services.AddScoped<IConsultationServices, ConsultationServices>();
+
+        services.AddScoped<IFileServices, FileServices>();
 
         services.AddScoped<IAuthentoicationServices, AuthentoicationServices>();
 
