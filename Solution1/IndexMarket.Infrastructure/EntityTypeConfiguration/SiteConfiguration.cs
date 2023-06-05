@@ -41,7 +41,7 @@ public sealed class SiteConfiguration : IEntityTypeConfiguration<Site>
             .HasForeignKey<Site>(s => s.Address_Id)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasData(Generation());
+        //builder.HasData(Generation());
     }
     private List<Site> Generation()
     {

@@ -36,7 +36,7 @@ public sealed class AddressConfiguration : IEntityTypeConfiguration<Address>
             .Property(add => add.PostalCode)
             .IsRequired(false);
 
-        builder.HasData(Generation());
+        //builder.HasData(Generation());
     }
     private List<Address> Generation()
     {

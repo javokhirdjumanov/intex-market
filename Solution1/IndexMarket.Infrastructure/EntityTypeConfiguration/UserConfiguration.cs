@@ -58,7 +58,7 @@ namespace IndexMarket.Infrastructure.EntityTypeConfiguration
                 .HasForeignKey<User>(user => user.Address_Id)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasData(GenerateUsers());
+            //builder.HasData(GenerateUsers());
         }
         private List<User> GenerateUsers()
         {
