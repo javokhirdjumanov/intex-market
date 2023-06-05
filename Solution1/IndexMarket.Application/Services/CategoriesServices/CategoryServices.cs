@@ -83,6 +83,7 @@ public partial class CategoryServices : ICategoryServices
         ValidationStorageCategory(storageCategory, categoryModifyDto.id);
 
         storageCategory.Title = categoryModifyDto.Title ?? storageCategory.Title;
+        storageCategory.UpdatedAt = DateTime.UtcNow;
 
         var updateCategory = await this.categoryRepository.UpdateAsync(storageCategory);
 

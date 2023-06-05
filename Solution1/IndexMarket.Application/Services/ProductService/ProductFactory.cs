@@ -56,6 +56,7 @@ public class ProductFactory : IProductFactory
         storageProduct.Price = productForModificationDto.Price ?? storageProduct.Price;
         storageProduct.Amount = productForModificationDto.Amount ?? storageProduct.Amount;
         storageProduct.Height = productForModificationDto.Height ?? storageProduct.Height;
+        storageProduct.UpdatedAt = DateTime.UtcNow;
 
         if(storageProduct.ProductShape.Name == Shapes.Rectangle)
             storageProduct.Weight = productForModificationDto.Weight ?? storageProduct.Weight;
