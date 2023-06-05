@@ -2,6 +2,7 @@
 using IndexMarket.Domain.Entities;
 using IndexMarket.Domain.Exceptions;
 using IndexMarket.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 
 namespace IndexMarket.Application.Services;
 public partial class OrderServices : IOrderServices
@@ -60,9 +61,14 @@ public partial class OrderServices : IOrderServices
         return this.orderFactory.MapToOrderDto(newOrder);
     }
 
-    public IQueryable<OrderDto> GetAllOrders()
+    public IEnumerable<OrderDto> GetAllOrders()
     {
-        var orders = this.orderRepository.SelectAll();
+        var orders = this.orderRepository
+            .SelectAll()
+            .Include(x => x.Product)
+            .Include(x => x.User)
+            .Include(x => x.User.Address)
+            .ToList();
 
         return orders.Select(x => this.orderFactory.MapToOrderDto(x));
     }
@@ -84,7 +90,9 @@ public partial class OrderServices : IOrderServices
     {
         ValidationId(orderId);
 
-        var storageOrder = await this.orderRepository.SelectByIdAsync(orderId);
+        var storageOrder = await this.orderRepository.SelectByIdWithDetailsAsync(
+            expression: order => order.Id == orderId,
+            includes: new string[] { nameof(Order.Product), $"{nameof(Order.User)}.{nameof(User.Address)}" });
 
         ValidationStorageOrder(storageOrder, orderId);
 

@@ -11,6 +11,7 @@ public class OrderFactory : IOrderFactory
             weight = $" x {newOrder.Product.Weight}";
 
         return new OrderDto(
+            newOrder.Id,
             newOrder.User.FirstName,
             newOrder.User.PhoneNumber,
             newOrder.Product.PhotoLink,
