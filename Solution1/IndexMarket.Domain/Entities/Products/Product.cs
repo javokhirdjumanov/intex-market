@@ -3,7 +3,6 @@
 namespace IndexMarket.Domain.Entities;
 public class Product : AudiTable
 {
-    public string? PhotoLink { get; set; }
     public decimal? SalePrice { get; set; }
     public decimal Price { get; set; }
     public int Amount { get; set; }
