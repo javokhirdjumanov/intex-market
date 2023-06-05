@@ -11,6 +11,7 @@ public class SiteFactory : ISiteFactory
         if (site.Address is not null)
         {
             addressDto = new AddressDto(
+                AddressId: site.Address.Id,
                 Country: site.Address.Country,
                 City: site.Address.City,
                 Region: site.Address.Region,

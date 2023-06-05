@@ -62,6 +62,7 @@ public class UserFactory : IUserFactory
         if(user.Address is not null)
         {
             addressDto = new AddressDto(
+                AddressId: user.Address.Id,
                 Country: user.Address.Country,
                 City: user.Address.City,
                 Region: user.Address.Region,
