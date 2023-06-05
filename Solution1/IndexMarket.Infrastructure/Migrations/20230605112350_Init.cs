@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace IndexMarket.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class INIT : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -39,6 +39,19 @@ namespace IndexMarket.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Categories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Type = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -119,6 +132,7 @@ namespace IndexMarket.Infrastructure.Migrations
                     Weight = table.Column<double>(type: "float", nullable: true),
                     Depth = table.Column<int>(type: "int", nullable: false),
                     Status = table.Column<int>(type: "int", nullable: false),
+                    File_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Category_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Shape_Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -131,6 +145,12 @@ namespace IndexMarket.Infrastructure.Migrations
                         name: "FK_Products_Categories_Category_Id",
                         column: x => x.Category_Id,
                         principalTable: "Categories",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Products_Files_File_Id",
+                        column: x => x.File_Id,
+                        principalTable: "Files",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -208,6 +228,12 @@ namespace IndexMarket.Infrastructure.Migrations
                 column: "Category_Id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_File_Id",
+                table: "Products",
+                column: "File_Id",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_Shape_Id",
                 table: "Products",
                 column: "Shape_Id");
@@ -245,6 +271,9 @@ namespace IndexMarket.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Categories");
+
+            migrationBuilder.DropTable(
+                name: "Files");
 
             migrationBuilder.DropTable(
                 name: "ProductShapes");

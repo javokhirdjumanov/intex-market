@@ -92,6 +92,25 @@ namespace IndexMarket.Infrastructure.Migrations
                     b.ToTable("Consultations", (string)null);
                 });
 
+            modelBuilder.Entity("IndexMarket.Domain.Entities.FileModel", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Files", (string)null);
+                });
+
             modelBuilder.Entity("IndexMarket.Domain.Entities.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -137,6 +156,9 @@ namespace IndexMarket.Infrastructure.Migrations
                     b.Property<int>("Depth")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("File_Id")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<double>("Height")
                         .HasColumnType("float");
 
@@ -165,6 +187,9 @@ namespace IndexMarket.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("Category_Id");
+
+                    b.HasIndex("File_Id")
+                        .IsUnique();
 
                     b.HasIndex("Shape_Id");
 
@@ -329,6 +354,12 @@ namespace IndexMarket.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("IndexMarket.Domain.Entities.FileModel", "File")
+                        .WithOne()
+                        .HasForeignKey("IndexMarket.Domain.Entities.Product", "File_Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("IndexMarket.Domain.Entities.ProductShape", "ProductShape")
                         .WithMany("Products")
                         .HasForeignKey("Shape_Id")
@@ -336,6 +367,8 @@ namespace IndexMarket.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
+
+                    b.Navigation("File");
 
                     b.Navigation("ProductShape");
                 });
