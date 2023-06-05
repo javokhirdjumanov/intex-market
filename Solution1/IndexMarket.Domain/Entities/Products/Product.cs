@@ -12,6 +12,9 @@ public class Product : AudiTable
     public int Depth { get; set; }
     public ProductStatus Status { get; set; }
 
+    public Guid File_Id { get; set; }
+    public FileModel File { get; set; }
+
     public Guid Category_Id { get; set; }
     public Category Category { get; set; }
 

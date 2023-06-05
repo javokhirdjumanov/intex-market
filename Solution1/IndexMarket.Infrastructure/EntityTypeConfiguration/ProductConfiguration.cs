@@ -56,5 +56,11 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
             .WithMany(sh => sh.Products)
             .HasForeignKey(p => p.Shape_Id)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder
+            .HasOne(p => p.File)
+            .WithOne()
+            .HasForeignKey<Product>(p => p.File_Id)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
