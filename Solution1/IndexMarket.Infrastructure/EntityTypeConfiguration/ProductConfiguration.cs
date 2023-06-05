@@ -13,11 +13,6 @@ public sealed class ProductConfiguration : IEntityTypeConfiguration<Product>
         builder.HasKey(p => p.Id);
 
         builder
-            .Property(p => p.PhotoLink)
-            .HasMaxLength(255)
-            .IsRequired(false);
-
-        builder
             .Property(p => p.Price)
             .IsRequired(true);
 
