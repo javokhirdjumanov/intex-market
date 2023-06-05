@@ -26,6 +26,10 @@ public class ProductCreationValidatorForRectangel : AbstractValidator<ProductFor
         RuleFor(c => c.Depth).NotEmpty()
             .WithMessage("Depth cannot be null !");
 
+        RuleFor(c => c.File_Id)
+            .NotEqual(default(Guid))
+            .WithMessage("File Id cannot default Guid !");
+
         RuleFor(c => c.Category_Id)
             .NotEqual(default(Guid))
             .WithMessage("Category Id cannot default Guid !");

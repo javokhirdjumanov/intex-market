@@ -20,6 +20,10 @@ public class ProductCreationValidator : AbstractValidator<ProductForCreationDto>
         RuleFor(p => p.Depth).NotEmpty()
             .WithMessage("Depth cannot null !");
 
+        RuleFor(p => p.File_Id)
+            .NotEqual(default(Guid))
+            .WithMessage("File cannot default Guid !");
+
         RuleFor(p => p.Category_Id)
             .NotEqual(default(Guid))
             .WithMessage("Category cannot default Guid !");
