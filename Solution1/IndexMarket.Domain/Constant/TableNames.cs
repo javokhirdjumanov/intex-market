@@ -12,5 +12,6 @@
         public static string ProductType = "ProductTypes";
         public static string ProductShape = "ProductShapes";
         public static string Consultations = "Consultations";
+        public static string Files = "Files";
     }
 }
