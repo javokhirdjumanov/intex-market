@@ -94,6 +94,9 @@ public static class ServicesExtentions
         services.AddScoped<IProductServices, ProductServices>();
         services.AddSingleton<IProductFactory, ProductFactory>();
 
+        services.AddScoped<IOrderServices, OrderServices>();
+        services.AddSingleton<IOrderFactory, OrderFactory>();
+
         services.AddScoped<IProductShapeService, ProductShapeService>();
 
         services.AddScoped<IAuthentoicationServices, AuthentoicationServices>();
@@ -109,6 +112,8 @@ public static class ServicesExtentions
 
         services.AddValidatorsFromAssemblyContaining<ProductCreationValidator>();
         services.AddValidatorsFromAssemblyContaining<ProductModificationValidator>();
+
+        services.AddValidatorsFromAssemblyContaining<OrderCreationValidator>();
 
         return services;
     }
