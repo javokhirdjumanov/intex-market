@@ -1,4 +1,5 @@
-﻿using IndexMarket.Application.Services;
+﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Application.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IndexMarket.Api.Controllers;
@@ -13,7 +14,7 @@ public class FileModelController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<string>> PostFile(IFormFile file)
+    public async Task<ActionResult<FileDto>> PostFile(IFormFile file)
     {
         var newFile = await this.fileServices.UploadFile(file);
 
