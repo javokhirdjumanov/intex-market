@@ -11,14 +11,17 @@ public partial class CategoryServices : ICategoryServices
     private readonly IProductShapeRepository productShapeRepository;
     private readonly ICategoryRepository categoryRepository;
     private readonly AppDbContext context;
+    private readonly IFileRepository fileRepository;
     public CategoryServices(
         ICategoryRepository categoryRepository,
         AppDbContext context,
-        IProductShapeRepository productShapeRepository)
+        IProductShapeRepository productShapeRepository,
+        IFileRepository fileRepository)
     {
         this.categoryRepository = categoryRepository;
         this.context = context;
         this.productShapeRepository = productShapeRepository;
+        this.fileRepository = fileRepository;
     }
 
     public async ValueTask<CategoryDto> CreateCategoryAysnc(string categoryName)
@@ -52,14 +55,15 @@ public partial class CategoryServices : ICategoryServices
         foreach (var item in products)
         {
             var shape = await this.productShapeRepository.SelectByIdAsync(item.Shape_Id);
+            var file = await this.fileRepository.GetFileByIdAsync(item.File_Id);
 
+            item.File = file;
             item.ProductShape = shape;
         }
 
         var productDtos = new List<ProductDto>(
             products.Select(x => new ProductDto(
                 x.Id,
-                x.PhotoLink,
                 x.SalePrice,
                 x.Price,
                 x.Amount,
@@ -67,6 +71,7 @@ public partial class CategoryServices : ICategoryServices
                 x.Height,
                 x.Weight,
                 x.Depth,
+                new FileDto(x.File.Id, x.File.Type, x.File.FileName),
                 Enum.GetName(typeof(ProductStatus), x.Status),
                 new CategoryDto(x.Category.Id, x.Category.Title)))
             );

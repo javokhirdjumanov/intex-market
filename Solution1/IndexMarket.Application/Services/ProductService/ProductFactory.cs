@@ -8,11 +8,11 @@ public class ProductFactory : IProductFactory
     public Product MapToProduct(
         ProductForCreationDto productForCreationDto,
         Category maybeCategory,
-        ProductShape productShape)
+        ProductShape productShape,
+        FileModel fileModel)
     {
         return new Product
         {
-            PhotoLink = productForCreationDto.PhotoLink,
             SalePrice = productForCreationDto.SalePrice,
             Status = (productForCreationDto.SalePrice == null)
                 ? ProductStatus.Recommended
@@ -21,6 +21,7 @@ public class ProductFactory : IProductFactory
             Amount = productForCreationDto.Amount,
             Height = productForCreationDto.Height,
             Depth = productForCreationDto.Depth,
+            File = fileModel,
             Category = maybeCategory,
             ProductShape = productShape
         };
@@ -29,11 +30,11 @@ public class ProductFactory : IProductFactory
     public Product MapToProduct(
         ProductForCreationDtoRectangel productForCreationDtoRectangel,
         Category category,
-        ProductShape productShape)
+        ProductShape productShape,
+        FileModel fileModel)
     {
         return new Product
         {
-            PhotoLink = productForCreationDtoRectangel.PhotoLink,
             SalePrice = productForCreationDtoRectangel.SalePrice,
             Status = (productForCreationDtoRectangel.SalePrice == null) 
                 ? ProductStatus.Recommended 
@@ -43,6 +44,7 @@ public class ProductFactory : IProductFactory
             Height = productForCreationDtoRectangel.Height,
             Weight = productForCreationDtoRectangel.Weight,
             Depth = productForCreationDtoRectangel.Depth,
+            File = fileModel,
             Category = category,
             ProductShape = productShape
         };
@@ -52,7 +54,6 @@ public class ProductFactory : IProductFactory
         Product storageProduct,
         ProductForModificationDto productForModificationDto)
     {
-        storageProduct.PhotoLink = productForModificationDto.PhotoLink ?? storageProduct.PhotoLink;
         storageProduct.Price = productForModificationDto.Price ?? storageProduct.Price;
         storageProduct.Amount = productForModificationDto.Amount ?? storageProduct.Amount;
         storageProduct.Height = productForModificationDto.Height ?? storageProduct.Height;
@@ -80,9 +81,12 @@ public class ProductFactory : IProductFactory
         if(product.Category is not null)
             category = new CategoryDto(product.Category.Id, product.Category.Title);
 
+        FileDto? fileModel = default;
+        if (product.File is not null)
+            fileModel = new FileDto(product.File.Id, product.File.Type, product.File.FileName);
+
         return new ProductDto(
             productId: product.Id,
-            PhotoLink: product.PhotoLink,
             SalePrice: product.SalePrice,
             Price: product.Price,
             Amount: product.Amount,
@@ -90,6 +94,7 @@ public class ProductFactory : IProductFactory
             Height: product.Height,
             Weight: product.Weight,
             Depth: product.Depth,
+            File: fileModel,
             Status: Enum.GetName(typeof(ProductStatus), product.Status),
             Category: category);
     }

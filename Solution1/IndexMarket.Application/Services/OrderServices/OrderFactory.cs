@@ -13,8 +13,11 @@ public class OrderFactory : IOrderFactory
         return new OrderDto(
             newOrder.Id,
             newOrder.User.FirstName,
+            new FileDto(
+                newOrder.Product.File.Id,
+                newOrder.Product.File.Type,
+                newOrder.Product.File.FileName),
             newOrder.User.PhoneNumber,
-            newOrder.Product.PhotoLink,
             $"{newOrder.Product.Height}{weight}/{newOrder.Product.Depth}",
             newOrder.Product.Price,
             new AddressDto(

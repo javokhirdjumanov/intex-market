@@ -1,4 +1,5 @@
-﻿using IndexMarket.Domain.Entities;
+﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Domain.Entities;
 using IndexMarket.Domain.Exceptions;
 using IndexMarket.Infrastructure.Repository;
 using Microsoft.AspNetCore.Http;
@@ -16,7 +17,7 @@ public class FileServices : IFileServices
         this.fileRepository = fileRepository;
     }
 
-    public async Task<string> UploadFile(IFormFile file)
+    public async Task<FileDto> UploadFile(IFormFile file)
     {
         var exension = Path.GetExtension(file.FileName);
 
@@ -39,7 +40,7 @@ public class FileServices : IFileServices
             await file.CopyToAsync(stream);
         }
 
-        return JsonSerializer.Serialize($"File Id: {newFile.Id}");
+        return new FileDto(newFile.Id, newFile.Type, newFile.FileName);
     }
 
     public async Task<(FileStream, FileModel)> DownloadFile(Guid fileId)

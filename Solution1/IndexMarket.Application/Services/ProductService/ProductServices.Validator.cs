@@ -36,7 +36,7 @@ public partial class ProductServices
         }
     }
 
-    public void ValidationProductId(Guid productId)
+    public void ValidationId(Guid productId)
     {
         if(productId == default)
         {

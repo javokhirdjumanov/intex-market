@@ -34,7 +34,7 @@ public partial class OrderServices : IOrderServices
         ValidationId(orderCreationDto.Product_Id);
         var storageProduct = await this.productRepository.SelectByIdWithDetailsAsync(
             expression: pro => pro.Id == orderCreationDto.Product_Id,
-            includes: new string[] { nameof(Product.Category), nameof(Product.ProductShape) });
+            includes: new string[] { nameof(Product.Category), nameof(Product.ProductShape), nameof(Product.File) });
 
         if (storageProduct == null) 
             throw new NotFoundException("Product not found !");
@@ -76,6 +76,7 @@ public partial class OrderServices : IOrderServices
         var orders = this.orderRepository
             .SelectAll()
             .Include(x => x.Product)
+            .Include(x => x.Product.File)
             .Include(x => x.User)
             .Include(x => x.User.Address)
             .ToList();
@@ -89,7 +90,7 @@ public partial class OrderServices : IOrderServices
 
         var order = await this.orderRepository.SelectByIdWithDetailsAsync(
             expression: ord => ord.Id == orderId,
-            includes: new string[] { nameof(Order.Product), $"{nameof(Order.User)}.{nameof(User.Address)}"});
+            includes: new string[] { $"{nameof(Order.Product)}.{nameof(Product.File)}", $"{nameof(Order.User)}.{nameof(User.Address)}"});
 
         ValidationStorageOrder(order, orderId);
 
@@ -102,7 +103,7 @@ public partial class OrderServices : IOrderServices
 
         var storageOrder = await this.orderRepository.SelectByIdWithDetailsAsync(
             expression: order => order.Id == orderId,
-            includes: new string[] { nameof(Order.Product), $"{nameof(Order.User)}.{nameof(User.Address)}" });
+            includes: new string[] { $"{nameof(Order.Product)}.{nameof(Product.File)}", $"{nameof(Order.User)}.{nameof(User.Address)}" });
 
         ValidationStorageOrder(storageOrder, orderId);
 

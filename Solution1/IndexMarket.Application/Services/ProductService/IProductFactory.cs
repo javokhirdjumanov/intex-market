@@ -9,12 +9,14 @@ public interface IProductFactory
     Product MapToProduct(
         ProductForCreationDto productForCreationDto,
         Category maybeCategory,
-        ProductShape productShape);
+        ProductShape productShape,
+        FileModel fileModel);
 
     Product MapToProduct(
         ProductForCreationDtoRectangel productForCreationDtoRectangel,
         Category category,
-        ProductShape productShape);
+        ProductShape productShape,
+        FileModel fileModel);
 
     void MapToProduct(Product storageProduct, ProductForModificationDto productForModificationDto);
 }
