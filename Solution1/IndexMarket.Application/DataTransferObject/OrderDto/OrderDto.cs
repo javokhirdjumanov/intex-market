@@ -2,8 +2,8 @@
 public record OrderDto(
     Guid? orderId,
     string UserName,
+    FileDto file,
     string PhoneNumber,
-    string? PhotoLink,
     string SizeProduct,
     decimal Price,
     AddressDto Address,
