@@ -1,5 +1,6 @@
 ﻿using IndexMarket.Application.DataTransferObject;
 using IndexMarket.Domain.Entities;
+using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace IndexMarket.Application.Services;
 public class OrderFactory : IOrderFactory
@@ -21,6 +22,7 @@ public class OrderFactory : IOrderFactory
             $"{newOrder.Product.Height}{weight}/{newOrder.Product.Depth}",
             newOrder.Product.Price,
             new AddressDto(
+                newOrder.User.Address.Id,
                 newOrder.User.Address!.Country,
                 newOrder.User.Address.City,
                 newOrder.User.Address.Region,
