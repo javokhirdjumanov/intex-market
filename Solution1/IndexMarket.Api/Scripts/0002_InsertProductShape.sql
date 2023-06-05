@@ -15,6 +15,12 @@ CREATE TABLE [dbo].[ProductShapes] (
 
 
 INSERT INTO ProductShapes (Id, Name)
-VALUES ('4110b601-cdd5-44e7-1817-08db6457b821', 'Rectangle');
+VALUES ('1240b601-cdd5-44e7-1817-08db6457b821', 'Rectangle');
+
+INSERT INTO ProductShapes (Id, Name)
+VALUES ('2310b601-cdd5-44e7-1817-08db6457b821', 'Aylana');
+
+INSERT INTO ProductShapes (Id, Name)
+VALUES ('3810b601-cdd5-44e7-1817-08db6457b821', 'Shar');
 
 select * from ProductShapes;
