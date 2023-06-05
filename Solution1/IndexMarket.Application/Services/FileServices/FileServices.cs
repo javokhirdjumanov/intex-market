@@ -26,10 +26,7 @@ public class FileServices : IFileServices
             FileName = file.FileName.Replace(exension, string.Empty),
         });
 
-        var additionalInformationDirectory = "AdditionalInformation";
-        var uploadsDirectory = "UploadsFiles";
-
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), additionalInformationDirectory, uploadsDirectory);
+        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "AdditionalInformation", "UploadsFiles");
 
         if(!Directory.Exists(filePath))
         {
@@ -52,8 +49,10 @@ public class FileServices : IFileServices
         if(newFile == null)
             throw new NotFoundException($"Couldn't file the given id: {fileId}");
 
+
         var filePath = Path.Combine(
             Directory.GetCurrentDirectory(),
+            "AdditionalInformation",
             "UploadsFiles",
             fileId.ToString() + newFile.Type);
 
