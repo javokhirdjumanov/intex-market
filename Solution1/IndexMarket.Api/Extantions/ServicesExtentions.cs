@@ -18,18 +18,22 @@ public static class ServicesExtentions
 {
     public static IServiceCollection AddDbContexts(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("SqlServer");
+        var connectionString = configuration.GetConnectionString("PostrgeSQL");
 
         services.Configure<JwtOptions>(configuration.GetSection("JwtSettings"));
 
         services.AddSwaggerService();
 
-        services.AddDbContextPool<AppDbContext>(options =>
+        /*services.AddDbContextPool<AppDbContext>(options =>
         {
-            options.UseSqlServer(connectionString, sqlOptions =>
+            options.UseNpgsql(connectionString, sqlOptions =>
             {
                 sqlOptions.EnableRetryOnFailure();
             });
+        });*/
+        services.AddDbContextPool<AppDbContext>(options =>
+        {
+            options.UseNpgsql(connectionString);
         });
 
         return services;
