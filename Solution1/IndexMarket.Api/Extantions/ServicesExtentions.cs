@@ -117,6 +117,8 @@ public static class ServicesExtentions
 
         services.AddValidatorsFromAssemblyContaining<OrderCreationValidator>();
 
+        services.AddHttpContextAccessor();
+
         return services;
     }
     private static void AddSwaggerService(this IServiceCollection services)
