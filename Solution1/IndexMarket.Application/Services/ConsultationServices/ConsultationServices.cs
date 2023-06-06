@@ -1,10 +1,11 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Application.Extantions;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Repository;
 using Microsoft.EntityFrameworkCore;
 
 namespace IndexMarket.Application.Services;
-public partial class ConsultationServices : IConsultationServices
+public class ConsultationServices : IConsultationServices
 {
     private readonly IConsultationRepository consultationRepository;
     public ConsultationServices(IConsultationRepository consultationRepository)
@@ -30,13 +31,18 @@ public partial class ConsultationServices : IConsultationServices
 
     public async ValueTask<ConsultationsDto> GetConsultationsByIdAsync(Guid consultationId)
     {
-        ValidationConsultationId(consultationId);
+        consultationId.IsDefault();
 
-        var consultation = await this.consultationRepository.SelectByIdWithDetailsAsync(
+        var consultation = await this.consultationRepository
+            .SelectByIdWithDetailsAsync(
             expression: con => con.Id == consultationId,
-            includes: new string[] { $"{nameof(Consultation.Order)}.{nameof(Order.User)}" });
+            includes: new string[]
+            {
+                $"{nameof(Consultation.Order)}.{nameof(Order.User)}"
+            });
 
-        ValidationStorageConsultation(consultation, consultationId);
+        ValidationStorageObject
+            .ValidationGeneric<Consultation>(consultation, consultationId);
 
         return new ConsultationsDto(
             consultation.Id,
@@ -47,15 +53,21 @@ public partial class ConsultationServices : IConsultationServices
 
     public async ValueTask<ConsultationsDto> DeleteConsultationAsync(Guid consultationId)
     {
-        ValidationConsultationId(consultationId);
+        consultationId.IsDefault();
 
-        var consultation = await this.consultationRepository.SelectByIdWithDetailsAsync(
+        var consultation = await this.consultationRepository
+            .SelectByIdWithDetailsAsync(
             expression: con => con.Id == consultationId,
-            includes: new string[] { $"{nameof(Consultation.Order)}.{nameof(Order.User)}" });
+            includes: new string[]
+            {
+                $"{nameof(Consultation.Order)}.{nameof(Order.User)}"
+            });
 
-        ValidationStorageConsultation(consultation, consultationId);
+        ValidationStorageObject
+            .ValidationGeneric<Consultation>(consultation, consultationId);
 
-        var removeConsultation = await this.consultationRepository.DeleteAsync(consultation);
+        var removeConsultation = await this.consultationRepository
+            .DeleteAsync(consultation);
 
         return new ConsultationsDto(consultation.Id,
             consultation.Order.User.FirstName,
