@@ -13,14 +13,14 @@ CREATE TABLE [dbo].[ProductShapes] (
     [Name] NVARCHAR (100)   NOT NULL
 );
 
+INSERT INTO /*public*/."ProductShapes" 
+	("Id", "Name")
+VALUES 
+	('1240b601-cdd5-44e7-1817-08db6457b821', 'Rectangle');
 
-INSERT INTO ProductShapes (Id, Name)
-VALUES ('1240b601-cdd5-44e7-1817-08db6457b821', 'Rectangle');
-
-INSERT INTO ProductShapes (Id, Name)
-VALUES ('2310b601-cdd5-44e7-1817-08db6457b821', 'Aylana');
-
-INSERT INTO ProductShapes (Id, Name)
-VALUES ('3810b601-cdd5-44e7-1817-08db6457b821', 'Shar');
+INSERT INTO /*public*/."ProductShapes" 
+	("Id", "Name")
+VALUES 
+	('2310b601-cdd5-44e7-1817-08db6457b821', 'Circle');
 
 select * from ProductShapes;
