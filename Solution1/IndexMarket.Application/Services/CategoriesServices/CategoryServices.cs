@@ -1,9 +1,9 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Application.Extantions;
 using IndexMarket.Domain;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Context;
 using IndexMarket.Infrastructure.Repository;
-using System.Security.Cryptography.X509Certificates;
 
 namespace IndexMarket.Application.Services;
 public partial class CategoryServices : ICategoryServices
@@ -26,36 +26,50 @@ public partial class CategoryServices : ICategoryServices
 
     public async ValueTask<CategoryDto> CreateCategoryAysnc(string categoryName)
     {
-        ValidationCategoryName(categoryName);
-
-        var addedCategory = await this.categoryRepository.InsertAsync(new Category { Title = categoryName });
+        var addedCategory = await this.categoryRepository
+            .InsertAsync(new Category
+            {
+                Title = categoryName
+            });
 
         return new CategoryDto(addedCategory.Id, addedCategory.Title); ;
     }
 
     public IQueryable<CategoryDto> RetrieveCategories()
     {
-        var categories = this.categoryRepository.SelectAll();
+        var categories = this.categoryRepository
+            .SelectAll();
 
-        return categories.Select(x => new CategoryDto(x.Id, x.Title));
+        return categories
+            .Select(x => new CategoryDto(x.Id, x.Title));
     }
 
     public async ValueTask<CategoryDtoWithProducts> RetrieveCategoryByIdWithProductsAsync(Guid categoryId)
     {
-        ValidationCategoryId(categoryId);
+        categoryId.IsDefault();
 
-        var storageCategory = await this.categoryRepository.SelectByIdWithDetailsAsync(
+        var storageCategory = await this.categoryRepository
+            .SelectByIdWithDetailsAsync(
             expression: category => category.Id == categoryId,
-            includes: new string[] { nameof(Category.Products) });
+            includes: new string[]
+            {
+                nameof(Category.Products)
+            });
 
-        var products = storageCategory.Products.Select(p => p).ToList();
+        var products = storageCategory.Products
+            .Select(p => p)
+            .ToList();
 
-        ValidationStorageCategory(storageCategory, categoryId);
+        ValidationStorageObject
+            .ValidationGeneric<Category>(storageCategory, categoryId);
 
         foreach (var item in products)
         {
-            var shape = await this.productShapeRepository.SelectByIdAsync(item.Shape_Id);
-            var file = await this.fileRepository.GetFileByIdAsync(item.File_Id);
+            var shape = await this.productShapeRepository
+                .SelectByIdAsync(item.Shape_Id);
+
+            var file = await this.fileRepository
+                .GetFileByIdAsync(item.File_Id);
 
             item.File = file;
             item.ProductShape = shape;
@@ -83,27 +97,33 @@ public partial class CategoryServices : ICategoryServices
     {
         ValidationCategoryForModify(categoryModifyDto);
 
-        var storageCategory = await this.categoryRepository.SelectByIdAsync(categoryModifyDto.id);
+        var storageCategory = await this.categoryRepository
+            .SelectByIdAsync(categoryModifyDto.id);
 
-        ValidationStorageCategory(storageCategory, categoryModifyDto.id);
+        ValidationStorageObject
+            .ValidationGeneric<Category>(storageCategory, categoryModifyDto.id);
 
         storageCategory.Title = categoryModifyDto.Title ?? storageCategory.Title;
         storageCategory.UpdatedAt = DateTime.UtcNow;
 
-        var updateCategory = await this.categoryRepository.UpdateAsync(storageCategory);
+        var updateCategory = await this.categoryRepository
+            .UpdateAsync(storageCategory);
 
         return new CategoryDto(updateCategory.Id, updateCategory.Title);
     }
 
     public async ValueTask<CategoryDto> RemoveCategoryAsync(Guid categoryId)
     {
-        ValidationCategoryId(categoryId);
+        categoryId.IsDefault();
 
-        var storageCategory = await this.categoryRepository.SelectByIdAsync(categoryId);
+        var storageCategory = await this.categoryRepository
+            .SelectByIdAsync(categoryId);
 
-        ValidationStorageCategory(storageCategory, categoryId);
+        ValidationStorageObject
+            .ValidationGeneric<Category>(storageCategory, categoryId);
 
-        var removedCategory = await this.categoryRepository.DeleteAsync(storageCategory);
+        var removedCategory = await this.categoryRepository
+            .DeleteAsync(storageCategory);
 
         return new CategoryDto(removedCategory.Id, removedCategory.Title);
     }
