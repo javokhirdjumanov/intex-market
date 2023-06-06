@@ -1,4 +1,5 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Application.Paginations;
 using IndexMarket.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,9 +26,10 @@ public class CategoryController : ControllerBase
     }
 
     [HttpGet("All")]
-    public IActionResult GetCategories()
+    public IActionResult GetCategories(
+        [FromQuery] QueryParametrs queryParametrs)
     {
-        var categories = this.categoryServices.RetrieveCategories();
+        var categories = this.categoryServices.RetrieveCategories(queryParametrs);
 
         return Ok(categories);
     }
