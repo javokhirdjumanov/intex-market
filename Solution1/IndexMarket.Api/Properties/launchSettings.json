@@ -12,7 +12,7 @@
     "IndexMarket.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,       // swagger o'chirildi
+      "launchBrowser": true,
       "launchUrl": "swagger",
       "applicationUrl": "https://localhost:7195;http://localhost:5250",
       "environmentVariables": {

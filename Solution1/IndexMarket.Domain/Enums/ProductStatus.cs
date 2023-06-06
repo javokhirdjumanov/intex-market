@@ -1,7 +1,7 @@
 ﻿namespace IndexMarket.Domain;
 public enum ProductStatus
 {
-    Recommended = 1, // tafsiya etilgan
-    Discount, // skidka
-    Not_Available // mavjudEmas
+    Recommended = 1,
+    Discount,
+    Not_Available
 }

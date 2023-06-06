@@ -1,6 +1,7 @@
 ﻿using IndexMarket.Application.DataTransferObject;
 using IndexMarket.Application.Extantions;
 using IndexMarket.Application.Paginations;
+using IndexMarket.Domain;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Context;
 using IndexMarket.Infrastructure.Repository;
@@ -142,8 +143,9 @@ public partial class ProductServices : IProductServices
                 pageSize: queryParametrs.Page.Size,
                 pageIndex: queryParametrs.Page.Index);
 
-        return products.Select(x => this.productFactory
-        .MapToProductDto(x));
+        return products
+            .Select(x => this.productFactory
+            .MapToProductDto(x));
     }
 
     public async ValueTask<ProductDto> RetrieveProductByIdAsync(Guid productId)
@@ -214,10 +216,9 @@ public partial class ProductServices : IProductServices
         ValidationStorageObject
             .ValidationGeneric<Product>(storageProduct, productId);
 
-        var removePro = await this.productRepository
-            .DeleteAsync(storageProduct);
+        storageProduct.Status = ProductStatus.Deleted;
 
         return this.productFactory
-            .MapToProductDto(removePro);
+            .MapToProductDto(storageProduct);
     }
 }
