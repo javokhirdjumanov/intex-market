@@ -1,9 +1,11 @@
 ﻿using IndexMarket.Application.DataTransferObject;
 using IndexMarket.Application.Extantions;
+using IndexMarket.Application.Paginations;
 using IndexMarket.Domain;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Context;
 using IndexMarket.Infrastructure.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace IndexMarket.Application.Services;
 public partial class CategoryServices : ICategoryServices
@@ -12,16 +14,19 @@ public partial class CategoryServices : ICategoryServices
     private readonly ICategoryRepository categoryRepository;
     private readonly AppDbContext context;
     private readonly IFileRepository fileRepository;
+    private readonly IHttpContextAccessor httpContextAccessor;
     public CategoryServices(
         ICategoryRepository categoryRepository,
         AppDbContext context,
         IProductShapeRepository productShapeRepository,
-        IFileRepository fileRepository)
+        IFileRepository fileRepository,
+        IHttpContextAccessor httpContextAccessor)
     {
         this.categoryRepository = categoryRepository;
         this.context = context;
         this.productShapeRepository = productShapeRepository;
         this.fileRepository = fileRepository;
+        this.httpContextAccessor = httpContextAccessor;
     }
 
     public async ValueTask<CategoryDto> CreateCategoryAysnc(string categoryName)
@@ -35,10 +40,14 @@ public partial class CategoryServices : ICategoryServices
         return new CategoryDto(addedCategory.Id, addedCategory.Title); ;
     }
 
-    public IQueryable<CategoryDto> RetrieveCategories()
+    public IQueryable<CategoryDto> RetrieveCategories(QueryParametrs queryParametrs)
     {
         var categories = this.categoryRepository
-            .SelectAll();
+            .SelectAll()
+            .ToPagedList(
+                httpContext: this.httpContextAccessor.HttpContext,
+                pageSize: queryParametrs.Page.Size,
+                pageIndex: queryParametrs.Page.Index);
 
         return categories
             .Select(x => new CategoryDto(x.Id, x.Title));
