@@ -216,9 +216,10 @@ public partial class ProductServices : IProductServices
         ValidationStorageObject
             .ValidationGeneric<Product>(storageProduct, productId);
 
-        storageProduct.Status = ProductStatus.Deleted;
+        var removeProduct = await this.productRepository
+            .DeleteAsync(storageProduct);
 
         return this.productFactory
-            .MapToProductDto(storageProduct);
+            .MapToProductDto(removeProduct);
     }
 }
