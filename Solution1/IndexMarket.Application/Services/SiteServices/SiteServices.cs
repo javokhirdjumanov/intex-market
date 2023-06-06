@@ -1,4 +1,5 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Application.Extantions;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Context;
 using IndexMarket.Infrastructure.Repository;
@@ -10,32 +11,50 @@ public partial class SiteServices : ISiteServices
     private readonly AppDbContext appDbContext;
     private readonly ISitesRepository sitesRepository;
     private readonly ISiteFactory siteFactory;
-    public SiteServices(AppDbContext appDbContext, ISitesRepository sitesRepository, ISiteFactory siteFactory)
+    public SiteServices(
+        AppDbContext appDbContext,
+        ISitesRepository sitesRepository,
+        ISiteFactory siteFactory)
     {
         this.appDbContext = appDbContext;
         this.sitesRepository = sitesRepository;
         this.siteFactory = siteFactory;
     }
+
     public IQueryable<SiteDto> RetrieveSites()
     {
-        var allSites = this.sitesRepository.SelectAll().Include(a => a.Address);
+        var allSites = this.sitesRepository
+            .SelectAll()
+            .Include(a => a.Address);
 
-        return allSites.Select(sit => this.siteFactory.MapToSiteDto(sit));
+        return allSites.Select(sit => this.siteFactory
+        .MapToSiteDto(sit));
     }
+
     public async ValueTask<SiteDto> ModifySiteAsync(SiteModificationDto siteModificationDto)
     {
+        siteModificationDto.siteId.IsDefault();
+
         ValidateSiteForModificationDto(siteModificationDto);
 
-        var storageSite = await this.sitesRepository.SelectByIdWithDetailsAsync(
+        var storageSite = await this.sitesRepository
+            .SelectByIdWithDetailsAsync(
             expression: site => site.Id == siteModificationDto.siteId,
-            includes: new string[] { nameof(Site.Address) });
+            includes: new string[]
+            {
+                nameof(Site.Address)
+            });
 
-        ValidationStorageSite(storageSite, siteModificationDto.siteId);
+        ValidationStorageObject
+            .ValidationGeneric<Site>(storageSite, siteModificationDto.siteId);
 
-        this.siteFactory.MatToSite(storageSite, siteModificationDto);
+        this.siteFactory
+            .MatToSite(storageSite, siteModificationDto);
 
-        var modifySite = await this.sitesRepository.UpdateAsync(storageSite);
+        var modifySite = await this.sitesRepository
+            .UpdateAsync(storageSite);
 
-        return this.siteFactory.MapToSiteDto(modifySite);
+        return this.siteFactory
+            .MapToSiteDto(modifySite);
     }
 }

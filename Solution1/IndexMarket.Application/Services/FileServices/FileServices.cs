@@ -1,12 +1,9 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Application.Extantions;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Domain.Exceptions;
 using IndexMarket.Infrastructure.Repository;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using System.IO;
-using System.Text.Json;
 
 namespace IndexMarket.Application.Services;
 public class FileServices : IFileServices
@@ -27,7 +24,10 @@ public class FileServices : IFileServices
             FileName = file.FileName.Replace(exension, string.Empty),
         });
 
-        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "AdditionalInformation", "UploadsFiles");
+        var filePath = Path.Combine(
+            Directory.GetCurrentDirectory(),
+            "AdditionalInformation",
+            "UploadsFiles");
 
         if(!Directory.Exists(filePath))
         {
@@ -45,23 +45,25 @@ public class FileServices : IFileServices
 
     public async Task<(FileStream, FileModel)> DownloadFile(Guid fileId)
     {
-        var newFile = await this.fileRepository.GetFileByIdAsync(fileId);
+        fileId.IsDefault();
 
-        if(newFile == null)
-            throw new NotFoundException($"Couldn't file the given id: {fileId}");
+        var storageFile = await this.fileRepository
+            .GetFileByIdAsync(fileId);
 
+        ValidationStorageObject
+            .ValidationGeneric<FileModel>(storageFile, fileId);
 
         var filePath = Path.Combine(
             Directory.GetCurrentDirectory(),
             "AdditionalInformation",
             "UploadsFiles",
-            fileId.ToString() + newFile.Type);
+            fileId.ToString() + storageFile.Type);
 
         if (!System.IO.File.Exists(filePath))
             throw new NotFoundException($"Couldn't file the given id: {filePath}");
 
         var fileStream = new FileStream(filePath, FileMode.Open, FileAccess.Read);
 
-        return (fileStream, newFile);
+        return (fileStream, storageFile);
     }
 }

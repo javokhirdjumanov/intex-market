@@ -7,22 +7,6 @@ using System.Text.Json;
 namespace IndexMarket.Application.Services;
 public partial class SiteServices
 {
-    public void ValidationSiteId(Guid siteId)
-    {
-        if(siteId == default)
-        {
-            throw new ValidationException($"The given userId is invalid: {siteId}");
-        }
-    }
-
-    public void ValidationStorageSite(Site storageSite, Guid siteId)
-    {
-        if (storageSite is null)
-        {
-            throw new NotFoundException($"Couldn't find user with given id: {siteId}");
-        }
-    }
-
     public void ValidateSiteForModificationDto(SiteModificationDto siteModificationDto)
     {
         var validationResult = new SiteForMoficationDtoValidator()

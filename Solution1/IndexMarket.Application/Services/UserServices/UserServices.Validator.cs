@@ -8,21 +8,6 @@ using System.Text.Json;
 namespace IndexMarket.Application.Services;
 public partial class UserServices
 {
-    public void ValidationUserID(Guid userId)
-    {
-        if(userId == default)
-        {
-            throw new ValidationException($"The given userId is invalid: {userId}");
-        }
-    }
-    public void ValidationStorageUser(User storageUser, Guid userId)
-    {
-        if(storageUser is null)
-        {
-            throw new NotFoundException($"Couldn't find user with given id: {userId}");
-        }
-    }
-
     public void ValidateCreationUserDto(UserForCreationDto userForCreationDto)
     {
         var validationResult = new UserForCreationDtoValidator()

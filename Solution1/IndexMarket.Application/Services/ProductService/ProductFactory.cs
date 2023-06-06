@@ -52,7 +52,8 @@ public class ProductFactory : IProductFactory
 
     public void MapToProduct(
         Product storageProduct,
-        ProductForModificationDto productForModificationDto)
+        ProductForModificationDto productForModificationDto,
+        FileModel? fileModel)
     {
         storageProduct.Price = productForModificationDto.Price ?? storageProduct.Price;
         storageProduct.Amount = productForModificationDto.Amount ?? storageProduct.Amount;
@@ -67,6 +68,11 @@ public class ProductFactory : IProductFactory
 
         if (productForModificationDto.SalePrice == 0)
             storageProduct.Status = ProductStatus.Recommended;
+
+        if(fileModel is not null)
+        {
+            storageProduct.File = fileModel;
+        }
 
         storageProduct.Depth = productForModificationDto.Depth ?? storageProduct.Depth;
     }

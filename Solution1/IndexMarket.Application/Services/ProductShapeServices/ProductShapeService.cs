@@ -12,7 +12,8 @@ public class ProductShapeService : IProductShapeService
 
     public IQueryable<ProductShapeDto> RetrieveProductsShapes()
     {
-        var productShapes = this.productShapeRepository.SelectAll();
+        var productShapes = this.productShapeRepository
+            .SelectAll();
 
         var dict = new Dictionary<string, Guid>();
         foreach (var item in productShapes.ToList())

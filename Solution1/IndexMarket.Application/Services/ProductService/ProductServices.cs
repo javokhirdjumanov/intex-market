@@ -1,4 +1,5 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Application.Extantions;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Context;
 using IndexMarket.Infrastructure.Repository;
@@ -32,25 +33,47 @@ public partial class ProductServices : IProductServices
     {
         ValidateCreationProductDto(productCreationDto);
 
-        ValidationId(productCreationDto.Category_Id);
-        Category? maybeCategory = await this.categoryRepository.SelectByIdAsync(productCreationDto.Category_Id);
-        ValidationGeneric<Category>(maybeCategory);
+        /// <summary>
+        /// Categories
+        productCreationDto.Category_Id.IsDefault();
 
-        ValidationId(productCreationDto.Shape_Id);
-        ProductShape? productShape = await this.productShapeRepository.SelectByIdAsync(productCreationDto.Shape_Id);
-        ValidationGeneric<ProductShape>(productShape);
+        Category? maybeCategory = await this.categoryRepository
+            .SelectByIdAsync(productCreationDto.Category_Id);
+
+        ValidationStorageObject
+            .ValidationGeneric<Category>(maybeCategory, productCreationDto.Category_Id);
+        /// </summary>
+
+        /// Product Shape
+        productCreationDto.Shape_Id.IsDefault();
+
+        ProductShape? productShape = await this.productShapeRepository
+            .SelectByIdAsync(productCreationDto.Shape_Id);
+
+        ValidationStorageObject
+            .ValidationGeneric<ProductShape>(productShape, productCreationDto.Category_Id);
+        /// </summary>
+
         ValidationNotRectangel(productShape);
 
-        ValidationId(productCreationDto.File_Id);
-        var storageProductPhoto = await this.fileRepository.GetFileByIdAsync(productCreationDto.File_Id);
-        ValidationGeneric<FileModel>(storageProductPhoto);
+        /// Product Files
+        productCreationDto.File_Id.IsDefault();
+
+        var storageProductPhoto = await this.fileRepository
+            .GetFileByIdAsync(productCreationDto.File_Id);
+
+        ValidationStorageObject
+            .ValidationGeneric<FileModel>(storageProductPhoto, productCreationDto.Category_Id);
+        /// </summary>
 
         var newProduct = this.productFactory
             .MapToProduct(productCreationDto, maybeCategory, productShape, storageProductPhoto);
 
-        var storageProduct = await this.productRepository.InsertAsync(newProduct);
+        var storageProduct = await this.productRepository
+            .InsertAsync(newProduct);
 
-        return this.productFactory.MapToProductDto(storageProduct);
+        return this.productFactory
+            .MapToProductDto(storageProduct);
     }
 
     public async ValueTask<ProductDto> CreateRectangelProductAsync(
@@ -58,80 +81,134 @@ public partial class ProductServices : IProductServices
     {
         ValidationCreationRectangleProductDto(productForCreationDtoRectangel);
 
-        ValidationId(productForCreationDtoRectangel.Category_Id);
+        /// Categories
+        productForCreationDtoRectangel.Category_Id.IsDefault();
+
         Category? maybeCategory = await this.categoryRepository
             .SelectByIdAsync(productForCreationDtoRectangel.Category_Id);
-        ValidationGeneric<Category>(maybeCategory);
 
-        ValidationId(productForCreationDtoRectangel.Shape_Id);
+        ValidationStorageObject
+            .ValidationGeneric<Category>(maybeCategory, productForCreationDtoRectangel.Category_Id);
+        /// </summary>
+
+        /// Product Shape
+        productForCreationDtoRectangel.Shape_Id.IsDefault();
+
         ProductShape? maybeShape = await this.productShapeRepository
-        .SelectByIdAsync(productForCreationDtoRectangel.Shape_Id);
-        ValidationGeneric<ProductShape>(maybeShape);
+            .SelectByIdAsync(productForCreationDtoRectangel.Shape_Id);
 
+        ValidationStorageObject
+            .ValidationGeneric<ProductShape>(maybeShape, productForCreationDtoRectangel.Shape_Id);
+        /// </summary>
+        
         ValidationRectangel(maybeShape);
 
-        ValidationId(productForCreationDtoRectangel.File_Id);
-        var storageProductPhoto = await this.fileRepository.GetFileByIdAsync(productForCreationDtoRectangel.File_Id);
-        ValidationGeneric<FileModel>(storageProductPhoto);
+        /// Product Files
+        productForCreationDtoRectangel.File_Id.IsDefault();
 
+        var storageProductPhoto = await this.fileRepository
+            .GetFileByIdAsync(productForCreationDtoRectangel.File_Id);
+
+        ValidationStorageObject
+             .ValidationGeneric<FileModel>(storageProductPhoto,
+                                           productForCreationDtoRectangel.Category_Id);
+        /// </summary>
+        
         var newProduct = this.productFactory
-            .MapToProduct(productForCreationDtoRectangel, maybeCategory, maybeShape, storageProductPhoto);
+            .MapToProduct(
+            productForCreationDtoRectangel,
+            maybeCategory,
+            maybeShape,
+            storageProductPhoto);
 
-        var storageProduct = await this.productRepository.InsertAsync(newProduct);
+        var storageProduct = await this.productRepository
+            .InsertAsync(newProduct);
 
-        return this.productFactory.MapToProductDto(storageProduct);
+        return this.productFactory
+            .MapToProductDto(storageProduct);
     }
 
     public IQueryable<ProductDto> RetrieveProducts()
     {
-        var products = this.productRepository.SelectAll();
+        var products = this.productRepository
+            .SelectAll();
 
-        return products.Select(x => this.productFactory.MapToProductDto(x));
+        return products.Select(x => this.productFactory
+        .MapToProductDto(x));
     }
 
     public async ValueTask<ProductDto> RetrieveProductByIdAsync(Guid productId)
     {
-        ValidationId(productId);
+        productId.IsDefault();
 
         var storageProduct = await this.productRepository
             .SelectByIdWithDetailsAsync(
             expression: pro => pro.Id == productId,
-            includes: new string[] { nameof(Product.Category), nameof(Product.ProductShape), nameof(Product.File) });
+            includes: new string[]
+            {
+                nameof(Product.Category),
+                nameof(Product.ProductShape),
+                nameof(Product.File)
+            });
 
-        ValidationStorageProduct(storageProduct, productId);
+        ValidationStorageObject
+            .ValidationGeneric<Product>(storageProduct, productId);
 
-        return this.productFactory.MapToProductDto(storageProduct);
+        return this.productFactory
+            .MapToProductDto(storageProduct);
     }
 
-    public async ValueTask<ProductDto> ModifyProductAsync(ProductForModificationDto productForModificationDto)
+    public async ValueTask<ProductDto> ModifyProductAsync(
+        ProductForModificationDto productForModificationDto)
     {
         ValidateModificationProductDto(productForModificationDto);
 
-        ValidationId(productForModificationDto.Product_Id);
+        productForModificationDto.Product_Id.IsDefault();
 
-        Product? storageProduct = await this.productRepository.SelectByIdWithDetailsAsync(
+        Product? storageProduct = await this.productRepository
+            .SelectByIdWithDetailsAsync(
             expression: p => p.Id == productForModificationDto.Product_Id,
-            includes: new string[] { nameof(Product.Category), nameof(Product.ProductShape), nameof(Product.File) });
+            includes: new string[]
+            {
+                nameof(Product.Category),
+                nameof(Product.ProductShape),
+                nameof(Product.File)
+            });
 
-        ValidationStorageProduct(storageProduct, productForModificationDto.Product_Id);
+        ValidationStorageObject
+            .ValidationGeneric<Product>(storageProduct, productForModificationDto.Product_Id);
 
-        this.productFactory.MapToProduct(storageProduct, productForModificationDto);
+        FileModel? fileModel = default;
+        if (productForModificationDto.Photo_Id.HasValue)
+        {
+            Guid guid = productForModificationDto.Photo_Id.Value;
+            fileModel = await this.fileRepository.GetFileByIdAsync(guid);
+        }
 
-        var modifyProduct = await this.productRepository.UpdateAsync(storageProduct);
+        this.productFactory
+            .MapToProduct(storageProduct, productForModificationDto, fileModel);
 
-        return this.productFactory.MapToProductDto(modifyProduct);
+        var modifyProduct = await this.productRepository
+            .UpdateAsync(storageProduct);
+
+        return this.productFactory
+            .MapToProductDto(modifyProduct);
     }
 
     public async ValueTask<ProductDto> RemoveProductAsync(Guid productId)
     {
-        ValidationId(productId);
+        productId.IsDefault();
 
-        var product = await this.productRepository.SelectByIdAsync(productId);
+        var storageProduct = await this.productRepository
+            .SelectByIdAsync(productId);
 
-        ValidationStorageProduct(product, productId);
+        ValidationStorageObject
+            .ValidationGeneric<Product>(storageProduct, productId);
 
-        var removePro = await this.productRepository.DeleteAsync(product);
+        var removePro = await this.productRepository
+            .DeleteAsync(storageProduct);
 
-        return this.productFactory.MapToProductDto(removePro);
+        return this.productFactory
+            .MapToProductDto(removePro);
     }
 }

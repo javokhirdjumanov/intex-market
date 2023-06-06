@@ -18,5 +18,8 @@ public interface IProductFactory
         ProductShape productShape,
         FileModel fileModel);
 
-    void MapToProduct(Product storageProduct, ProductForModificationDto productForModificationDto);
+    void MapToProduct(
+        Product storageProduct,
+        ProductForModificationDto productForModificationDto,
+        FileModel? fileModel);
 }

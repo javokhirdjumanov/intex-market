@@ -1,4 +1,5 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Application.Extantions;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Domain.Exceptions;
 using IndexMarket.Infrastructure.Repository;
@@ -31,26 +32,40 @@ public partial class OrderServices : IOrderServices
 
     public async ValueTask<OrderDto> CreateOrderAsync(OrderCreationDto orderCreationDto)
     {
-        ValidationId(orderCreationDto.Product_Id);
-        var storageProduct = await this.productRepository.SelectByIdWithDetailsAsync(
+        orderCreationDto.Product_Id.IsDefault();
+
+        var storageProduct = await this.productRepository
+            .SelectByIdWithDetailsAsync(
             expression: pro => pro.Id == orderCreationDto.Product_Id,
-            includes: new string[] { nameof(Product.Category), nameof(Product.ProductShape), nameof(Product.File) });
+            includes: new string[]
+            { 
+                nameof(Product.Category),
+                nameof(Product.ProductShape),
+                nameof(Product.File)
+            });
 
         if (storageProduct == null) 
             throw new NotFoundException("Product not found !");
 
-        ValidationId(orderCreationDto.User_Id);
-        var storageUser = await this.userRepository.SelectByIdWithDetailsAsync(
+        orderCreationDto.User_Id.IsDefault();
+
+        var storageUser = await this.userRepository
+            .SelectByIdWithDetailsAsync(
             expression: user => user.Id == orderCreationDto.User_Id,
-            includes: new string[] { nameof(User.Address) });
+            includes: new string[]
+            {
+                nameof(User.Address) 
+            });
 
         if (storageUser == null)
             throw new NotFoundException("User not found !");
 
-        ValidationId(orderCreationDto.Address_Id);
+        orderCreationDto.Address_Id.IsDefault();
+
         if(storageUser.Address is null)
         {
-            storageUser.Address = await this.addressRepository.SelectByIdAsync(orderCreationDto.Address_Id);
+            storageUser.Address = await this.addressRepository
+                .SelectByIdAsync(orderCreationDto.Address_Id);
         }
 
         var order = new Order
@@ -59,7 +74,8 @@ public partial class OrderServices : IOrderServices
             User = storageUser
         };
 
-        var newOrder = await this.orderRepository.InsertAsync(order);
+        var newOrder = await this.orderRepository
+            .InsertAsync(order);
 
         var newConsultation = await this.consultationRepository
             .InsertAsync(
@@ -68,7 +84,8 @@ public partial class OrderServices : IOrderServices
                 Order = newOrder
             });
 
-        return this.orderFactory.MapToOrderDto(newOrder);
+        return this.orderFactory
+            .MapToOrderDto(newOrder);
     }
 
     public IEnumerable<OrderDto> GetAllOrders()
@@ -81,34 +98,51 @@ public partial class OrderServices : IOrderServices
             .Include(x => x.User.Address)
             .ToList();
 
-        return orders.Select(x => this.orderFactory.MapToOrderDto(x));
+        return orders
+            .Select(x => this.orderFactory
+            .MapToOrderDto(x));
     }
 
     public async ValueTask<OrderDto> GetOrderByIdAsync(Guid orderId)
     {
-        ValidationId(orderId);
+        orderId.IsDefault();
 
-        var order = await this.orderRepository.SelectByIdWithDetailsAsync(
+        var storageOrder = await this.orderRepository
+            .SelectByIdWithDetailsAsync(
             expression: ord => ord.Id == orderId,
-            includes: new string[] { $"{nameof(Order.Product)}.{nameof(Product.File)}", $"{nameof(Order.User)}.{nameof(User.Address)}"});
+            includes: new string[]
+            { 
+                $"{nameof(Order.Product)}.{nameof(Product.File)}",
+                $"{nameof(Order.User)}.{nameof(User.Address)}"
+            });
 
-        ValidationStorageOrder(order, orderId);
+        ValidationStorageObject
+            .ValidationGeneric<Order>(storageOrder, orderId);
 
-        return this.orderFactory.MapToOrderDto(order);
+        return this.orderFactory
+            .MapToOrderDto(storageOrder);
     }
 
     public async ValueTask<OrderDto> DeleteOrdersAsync(Guid orderId)
     {
-        ValidationId(orderId);
+        orderId.IsDefault();
 
-        var storageOrder = await this.orderRepository.SelectByIdWithDetailsAsync(
+        var storageOrder = await this.orderRepository
+            .SelectByIdWithDetailsAsync(
             expression: order => order.Id == orderId,
-            includes: new string[] { $"{nameof(Order.Product)}.{nameof(Product.File)}", $"{nameof(Order.User)}.{nameof(User.Address)}" });
+            includes: new string[] 
+            { 
+                $"{nameof(Order.Product)}.{nameof(Product.File)}", 
+                $"{nameof(Order.User)}.{nameof(User.Address)}" 
+            });
 
-        ValidationStorageOrder(storageOrder, orderId);
+        ValidationStorageObject
+            .ValidationGeneric<Order>(storageOrder, orderId);
 
-        var removedOrder = await this.orderRepository.DeleteAsync(storageOrder);
+        var removedOrder = await this.orderRepository
+            .DeleteAsync(storageOrder);
 
-        return this.orderFactory.MapToOrderDto(removedOrder);
+        return this.orderFactory
+            .MapToOrderDto(removedOrder);
     }
 }
