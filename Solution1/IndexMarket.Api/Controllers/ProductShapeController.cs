@@ -1,4 +1,5 @@
-﻿using IndexMarket.Application.Services;
+﻿using IndexMarket.Application.Paginations;
+using IndexMarket.Application.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,9 +16,11 @@ public class ProductShapeController : ControllerBase
     }
 
     [HttpGet("All")]
-    public IActionResult GetProductShapes()
+    public IActionResult GetProductShapes(
+        [FromQuery] QueryParametrs queryParametrs)
     {
-        var productShapes = productShapeService.RetrieveProductsShapes();
+        var productShapes = productShapeService
+            .RetrieveProductsShapes(queryParametrs);
 
         return Ok(productShapes);
     }

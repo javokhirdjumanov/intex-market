@@ -1,4 +1,5 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Application.Paginations;
 using IndexMarket.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -34,9 +35,10 @@ public class ProductController : ControllerBase
     }
 
     [HttpGet("All")]
-    public IActionResult GetAllProducts()
+    public IActionResult GetAllProducts(
+        [FromQuery] QueryParametrs queryParametrs)
     {
-        var products = this.productServices.RetrieveProducts();
+        var products = this.productServices.RetrieveProducts(queryParametrs);
 
         return Ok(products);
     }
