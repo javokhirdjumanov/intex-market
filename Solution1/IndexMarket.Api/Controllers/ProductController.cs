@@ -15,9 +15,9 @@ public class ProductController : ControllerBase
         this.productServices = productServices;
     }
 
-    [AllowAnonymous]
     [HttpPost]
-    public async ValueTask<ActionResult<ProductDto>> PostProductAsync(ProductForCreationDto productForCreationDto)
+    public async ValueTask<ActionResult<ProductDto>> PostProductAsync(
+        ProductForCreationDto productForCreationDto)
     {
         var product = await this.productServices.CreateProductAsync(productForCreationDto);
 
@@ -50,7 +50,8 @@ public class ProductController : ControllerBase
     }
 
     [HttpPut]
-    public async ValueTask<ActionResult<ProductDto>> PutProductAsync(ProductForModificationDto productForModificationDto)
+    public async ValueTask<ActionResult<ProductDto>> PutProductAsync(
+        ProductForModificationDto productForModificationDto)
     {
         var modifyProduct = await this.productServices.ModifyProductAsync(productForModificationDto);
 
