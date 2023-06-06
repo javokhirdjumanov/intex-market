@@ -1,8 +1,10 @@
 ﻿using IndexMarket.Application.DataTransferObject;
 using IndexMarket.Application.Extantions;
+using IndexMarket.Application.Paginations;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Context;
 using IndexMarket.Infrastructure.Repository;
+using Microsoft.AspNetCore.Http;
 
 namespace IndexMarket.Application.Services;
 public partial class ProductServices : IProductServices
@@ -13,13 +15,15 @@ public partial class ProductServices : IProductServices
     private readonly ICategoryRepository categoryRepository;
     private readonly IProductShapeRepository productShapeRepository;
     private readonly IFileRepository fileRepository;
+    private readonly IHttpContextAccessor httpContextAccessor;
     public ProductServices(
         AppDbContext appDbContext,
         IProductRepository productRepository,
         IProductFactory productFactory,
         ICategoryRepository categoryRepository,
         IProductShapeRepository productShapeRepository,
-        IFileRepository fileRepository)
+        IFileRepository fileRepository,
+        IHttpContextAccessor httpContextAccessor)
     {
         this.appDbContext = appDbContext;
         this.productRepository = productRepository;
@@ -27,6 +31,7 @@ public partial class ProductServices : IProductServices
         this.categoryRepository = categoryRepository;
         this.productShapeRepository = productShapeRepository;
         this.fileRepository = fileRepository;
+        this.httpContextAccessor = httpContextAccessor;
     }
 
     public async ValueTask<ProductDto> CreateProductAsync(ProductForCreationDto productCreationDto)
@@ -128,10 +133,14 @@ public partial class ProductServices : IProductServices
             .MapToProductDto(storageProduct);
     }
 
-    public IQueryable<ProductDto> RetrieveProducts()
+    public IQueryable<ProductDto> RetrieveProducts(QueryParametrs queryParametrs)
     {
         var products = this.productRepository
-            .SelectAll();
+            .SelectAll()
+            .ToPagedList(
+                httpContext: this.httpContextAccessor.HttpContext,
+                pageSize: queryParametrs.Page.Size,
+                pageIndex: queryParametrs.Page.Index);
 
         return products.Select(x => this.productFactory
         .MapToProductDto(x));
