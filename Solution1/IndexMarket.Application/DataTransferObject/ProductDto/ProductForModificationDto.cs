@@ -6,4 +6,5 @@ public record ProductForModificationDto(
     int? Amount,
     double? Height,
     double? Weight,
-    int? Depth);
+    int? Depth,
+    Guid? Photo_Id);

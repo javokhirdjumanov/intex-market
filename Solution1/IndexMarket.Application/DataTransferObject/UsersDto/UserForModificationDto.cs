@@ -8,5 +8,4 @@ public record UserForModificationDto(
     string? city,
     string? region,
     string? street,
-    short? postalCode
-    );
+    short? postalCode);
