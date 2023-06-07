@@ -37,7 +37,7 @@ public static class ServicesExtentions
         {
             options.AddPolicy("UserPolicy", options =>
             {
-                options.RequireRole(UserRoles.Admin.ToString(), UserRoles.Client.ToString());
+                options.RequireRole(UserRoles.Admin.ToString());
             });
         });
 
