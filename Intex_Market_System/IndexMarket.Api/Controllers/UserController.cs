@@ -1,5 +1,6 @@
 ﻿using IndexMarket.Application.DataTransferObject;
 using IndexMarket.Application.Services;
+using IndexMarket.Domain.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,6 @@ namespace IndexMarket.Api.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "Admin")]
         public async ValueTask<ActionResult<UserDto>> PostUserAsync(
             UserForCreationDto userForCreationDto)
         {
@@ -35,8 +35,8 @@ namespace IndexMarket.Api.Controllers
             return Ok(users);
         }
 
-        //[Authorize]
         [HttpGet("{userId:guid}")]
+        [Authorize(Policy = "UserPolicy")]
         public async ValueTask<ActionResult<UserDto>> GetUserByIdAsync(
             Guid userId)
         {
