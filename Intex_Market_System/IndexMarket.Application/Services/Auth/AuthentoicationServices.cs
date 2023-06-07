@@ -29,7 +29,8 @@ public class AuthentoicationServices : IAuthentoicationServices
 
     public async ValueTask<TokenDto> LoginAsync(AuthentificationDto authentificationDto)
     {
-        var user = await this.userRepository.SelectByIdWithDetailsAsync(
+        var user = await this.userRepository
+            .SelectByIdWithDetailsAsync(
             expression: user => user.Email == authentificationDto.email,
             includes: Array.Empty<string>());
 
