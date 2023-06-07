@@ -1,7 +1,9 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Domain;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Domain.Enums;
 using IndexMarket.Infrastructure.Auth;
+using System;
 
 namespace IndexMarket.Application.Services;
 public class UserFactory : IUserFactory
@@ -36,7 +38,7 @@ public class UserFactory : IUserFactory
                 password: userForCreationDto.Password,
                 salt: randomSalt),
 
-            Role = UserRoles.Admin,
+            Role = UserRoles.Client,
         };
     }
 
@@ -75,8 +77,8 @@ public class UserFactory : IUserFactory
             FirstName: user.FirstName,
             LastName: user.LastName,
             PhoneNumber: user.PhoneNumber,
-            Email: user.Email,
-            Role: user.Role,
+        Email: user.Email,
+            Role: Enum.GetName(typeof(UserRoles), user.Role),
             address: addressDto);
     }
 }

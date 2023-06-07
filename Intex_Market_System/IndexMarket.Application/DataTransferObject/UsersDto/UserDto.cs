@@ -7,5 +7,5 @@ public record UserDto(
     string LastName,
     string PhoneNumber,
     string Email,
-    UserRoles Role,
+    string Role,
     AddressDto? address);
