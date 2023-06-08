@@ -1,6 +1,5 @@
 ﻿using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
 
 namespace IndexMarket.Infrastructure.Repository;
 public class OrderRepository 
@@ -11,5 +10,10 @@ public class OrderRepository
         : base(appDbContext)
     {
         this.appDbContext = appDbContext;
+    }
+
+    public ValueTask<Order> FilterOrders(string columnName)
+    {
+        throw new NotImplementedException();
     }
 }

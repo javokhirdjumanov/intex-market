@@ -1,9 +1,12 @@
 ﻿using IndexMarket.Application.DataTransferObject;
+using IndexMarket.Application.Extantions;
 using IndexMarket.Domain;
 using IndexMarket.Domain.Entities;
 using IndexMarket.Domain.Enums;
+using IndexMarket.Domain.Exceptions;
 using IndexMarket.Infrastructure.Auth;
 using System;
+using System.Text.RegularExpressions;
 
 namespace IndexMarket.Application.Services;
 public class UserFactory : IUserFactory
@@ -20,7 +23,7 @@ public class UserFactory : IUserFactory
         {
             FirstName = userForCreationDto.FirstName,
             LastName = userForCreationDto.LastName,
-            PhoneNumber = userForCreationDto.PhoneNumber,
+            PhoneNumber = userForCreationDto.PhoneNumber.PhoneNumberCleaner(),
             Email = userForCreationDto.Email,
 
             Address = new Address
@@ -77,7 +80,7 @@ public class UserFactory : IUserFactory
             FirstName: user.FirstName,
             LastName: user.LastName,
             PhoneNumber: user.PhoneNumber,
-        Email: user.Email,
+            Email: user.Email,
             Role: Enum.GetName(typeof(UserRoles), user.Role),
             address: addressDto);
     }
