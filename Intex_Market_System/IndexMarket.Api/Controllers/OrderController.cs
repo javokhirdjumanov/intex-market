@@ -37,6 +37,14 @@ public class OrderController : ControllerBase
         return Ok(order);
     }
 
+    [HttpGet("columnName")]
+    public IActionResult GetSearchOrders(string columnName)
+    {
+        var orders = this.orderServices.SearchOrders(columnName);
+
+        return Ok(orders);
+    }
+
     [HttpDelete("{orderId:guid}")]
     public async ValueTask<ActionResult<OrderDto>> DeleteOrderAsync(Guid orderId)
     {

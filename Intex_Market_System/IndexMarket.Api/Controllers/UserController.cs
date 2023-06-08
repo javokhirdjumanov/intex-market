@@ -36,7 +36,7 @@ namespace IndexMarket.Api.Controllers
         }
 
         [HttpGet("{userId:guid}")]
-        [Authorize(Policy = "UserPolicy")]
+       // [Authorize(Policy = "UserPolicy")]
         public async ValueTask<ActionResult<UserDto>> GetUserByIdAsync(
             Guid userId)
         {
