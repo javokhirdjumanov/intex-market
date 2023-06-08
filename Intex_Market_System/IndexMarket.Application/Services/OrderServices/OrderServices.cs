@@ -123,6 +123,26 @@ public partial class OrderServices : IOrderServices
             .MapToOrderDto(storageOrder);
     }
 
+    public IEnumerable<OrderDto> SearchOrders(string columnName)
+    {
+        var orders = this.orderRepository
+            .SelectAll()
+            .Include(x => x.Product)
+            .Include(x => x.Product.File)
+            .Include(x => x.Product.ProductShape)
+            .Include(x => x.User)
+            .Include(x => x.User.Address)
+            .ToList();
+
+        var filterOrders = orders.Where(o => o.User.FirstName.ToLower().Contains(columnName.ToLower()) ||
+                                    o.User.PhoneNumber.Contains(columnName) ||
+                                    o.Product.ProductShape.Name.ToLower().Contains(columnName.ToLower()));
+
+        return filterOrders
+            .Select(x => this.orderFactory
+            .MapToOrderDto(x));
+    }
+
     public async ValueTask<OrderDto> DeleteOrdersAsync(Guid orderId)
     {
         orderId.IsDefault();
