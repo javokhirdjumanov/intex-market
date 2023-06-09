@@ -25,7 +25,7 @@ public class CategoryController : ControllerBase
         return Created("", newCategory);
     }
 
-    [HttpGet("All")]
+    [HttpGet("all")]
     public IActionResult GetCategories(
         [FromQuery] QueryParametrs queryParametrs)
     {

@@ -14,7 +14,7 @@ public class ConsultationController : ControllerBase
         this.consultationServices = consultationServices;
     }
 
-    [HttpGet("All")]
+    [HttpGet("all")]
     public IActionResult GetAllConsultations()
     {
         var consultations = this.consultationServices.GetAllConsultations();

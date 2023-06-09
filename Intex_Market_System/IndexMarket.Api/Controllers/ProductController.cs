@@ -25,7 +25,7 @@ public class ProductController : ControllerBase
         return Created("", product);
     }
 
-    [HttpPost("Rectangel")]
+    [HttpPost("rectangel")]
     public async ValueTask<ActionResult<ProductDto>> PostProductRectangelAsync(
         ProductForCreationDtoRectangel productForCreationDtoRectangel)
     {
@@ -34,7 +34,7 @@ public class ProductController : ControllerBase
         return Created("", product); 
     }
 
-    [HttpGet("All")]
+    [HttpGet("all")]
     public IActionResult GetAllProducts(
         [FromQuery] QueryParametrs queryParametrs)
     {

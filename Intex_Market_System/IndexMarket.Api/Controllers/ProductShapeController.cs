@@ -15,7 +15,7 @@ public class ProductShapeController : ControllerBase
         this.productShapeService = productShapeService;
     }
 
-    [HttpGet("All")]
+    [HttpGet("all")]
     public IActionResult GetProductShapes(
         [FromQuery] QueryParametrs queryParametrs)
     {

@@ -21,7 +21,7 @@ public class OrderController : ControllerBase
         return Created("", order);
     }
 
-    [HttpGet("All")]
+    [HttpGet("all")]
     public IActionResult GetAllOrders()
     {
         var orders = this.orderServices.GetAllOrders();
@@ -37,15 +37,15 @@ public class OrderController : ControllerBase
         return Ok(order);
     }
 
-    [HttpGet("columnName")]
-    public IActionResult GetSearchOrders(string columnName)
+    [HttpGet("search")]
+    public IActionResult GetSearchOrders(string value)
     {
-        var orders = this.orderServices.SearchOrders(columnName);
+        var orders = this.orderServices.SearchOrders(value);
 
         return Ok(orders);
     }
 
-    [HttpGet("form_price to_price")]
+    [HttpGet("Form price To price/orders")]
     public IActionResult FilterOrdersByProductPrice(decimal? from_price, decimal? to_price)
     {
         var filterOrders = this.orderServices.FilterOrdersByProductPrice_S(from_price, to_price);

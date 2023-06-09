@@ -12,7 +12,7 @@ public class AddressController : ControllerBase
         _addressService = addressService;
     }
 
-    [HttpGet]
+    [HttpGet("all")]
     public IActionResult GetAllAddress()
     {
         var address = _addressService.GetAddresses();
