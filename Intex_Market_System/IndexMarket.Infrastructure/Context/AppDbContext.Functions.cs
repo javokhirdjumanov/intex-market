@@ -15,4 +15,10 @@ public partial class AppDbContext
         decimal? from_price,
         decimal? to_price) 
         => FromExpression(() => FilterOrdersByProductPrice(from_price, to_price));
+
+    [DbFunction("filter_orders_by_product_datatime_model", Schema = "public")]
+    public IQueryable<filter_products_price_in_order_model> FilterOrdersByCreatAt(
+        DateOnly from_date,
+        DateOnly to_date)
+        => FromExpression(() => FilterOrdersByCreatAt(from_date, to_date));
 }

@@ -17,4 +17,9 @@ public class OrderRepository
         decimal? from_price,
         decimal? to_price)
         => this.appDbContext.FilterOrdersByProductPrice(from_price, to_price);
+
+    public IQueryable<filter_products_price_in_order_model> FilterOrdersByCreateAt_R(
+        DateOnly from_date,
+        DateOnly to_date)
+        => this.appDbContext.FilterOrdersByCreatAt(from_date, to_date);
 }
