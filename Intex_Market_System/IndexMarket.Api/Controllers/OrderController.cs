@@ -53,6 +53,14 @@ public class OrderController : ControllerBase
         return Ok(filterOrders);
     }
 
+    [HttpGet("From date To date/orders")]
+    public IActionResult FilterOrdersByCreateAt(DateOnly from_date, DateOnly to_date)
+    {
+        var filterOrders = this.orderServices.FilterOrdersByCreateAt(from_date, to_date);
+
+        return Ok(filterOrders);
+    }
+
     [HttpDelete("{orderId:guid}")]
     public async ValueTask<ActionResult<OrderDto>> DeleteOrderAsync(Guid orderId)
     {
