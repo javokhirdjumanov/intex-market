@@ -66,16 +66,25 @@ public static class ServicesExtentions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services)
     {
         services.AddTransient<IAddressRepository, AddressRepository>();
+
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+
         services.AddTransient<IOrderRepository, OrderRepository>();
+        
         services.AddScoped<IProductRepository, ProductRepository>();
+        
         services.AddScoped<IProductShapeRepository, ProductShapeRepository>();
+        
         services.AddTransient<ISitesRepository, SitesRepository>();
+        
         services.AddScoped<IUserRepository, UserRepository>();
+        
         services.AddScoped<IConsultationRepository, ConsultationRepository>();
+        
         services.AddScoped<IFileRepository, FileRepository>();
 
         services.AddTransient<IJwtTokenHandler, JwtTokenHandler>();
+
         services.AddSingleton<IPasswordHasher, PasswordHasher>();
 
         return services;
@@ -101,6 +110,8 @@ public static class ServicesExtentions
         services.AddScoped<IConsultationServices, ConsultationServices>();
 
         services.AddScoped<IFileServices, FileServices>();
+        
+        services.AddScoped<IAddressService, AddressService>();
 
         services.AddScoped<IAuthentoicationServices, AuthentoicationServices>();
 
