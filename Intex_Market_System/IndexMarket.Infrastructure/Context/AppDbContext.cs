@@ -1,8 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using IndexMarket.Domain.Entities;
+using IndexMarket.Infrastructure.Repository;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace IndexMarket.Infrastructure.Context;
-public class AppDbContext : DbContext
+public partial class AppDbContext : DbContext
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) 
         : base(options)
