@@ -1,5 +1,6 @@
 ﻿using IndexMarket.Domain.Entities;
 using IndexMarket.Infrastructure.Context;
+using IndexMarket.Infrastructure.Repository.OrdersRepositories;
 
 namespace IndexMarket.Infrastructure.Repository;
 public class OrderRepository 
@@ -12,8 +13,9 @@ public class OrderRepository
         this.appDbContext = appDbContext;
     }
 
-    public ValueTask<Order> FilterOrders(string columnName)
+    public IQueryable<filter_products_price_in_order_model>
+        FilterOrdersByProductPrice_R(decimal? from_price, decimal? to_price)
     {
-        throw new NotImplementedException();
+        return this.appDbContext.Filter_Orders_By_Product_Price(from_price, to_price);
     }
 }
