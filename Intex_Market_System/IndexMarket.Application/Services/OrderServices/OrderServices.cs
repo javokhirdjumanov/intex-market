@@ -92,10 +92,8 @@ public partial class OrderServices : IOrderServices
     {
         var orders = this.orderRepository
             .SelectAll()
-            .Include(x => x.Product)
-            .Include(x => x.Product.File)
-            .Include(x => x.User)
-            .Include(x => x.User.Address)
+            .Include(x => x.Product).ThenInclude(p => p.File)
+            .Include(x => x.User).ThenInclude(u => u.Address)
             .ToList();
 
         return orders
@@ -127,11 +125,9 @@ public partial class OrderServices : IOrderServices
     {
         var orders = this.orderRepository
             .SelectAll()
-            .Include(x => x.Product)
-            .Include(x => x.Product.File)
+            .Include(x => x.Product).ThenInclude(p => p.File)
             .Include(x => x.Product.ProductShape)
-            .Include(x => x.User)
-            .Include(x => x.User.Address)
+            .Include(x => x.User).ThenInclude(u => u.Address)
             .ToList();
 
         var filterOrders = orders.Where(o => o.User.FirstName.ToLower().Contains(columnName.ToLower()) ||
@@ -141,6 +137,13 @@ public partial class OrderServices : IOrderServices
         return filterOrders
             .Select(x => this.orderFactory
             .MapToOrderDto(x));
+    }
+
+    public IQueryable<OrderDto> FilterOrdersByProductPrice_S(decimal? from_price, decimal? to_price)
+    {
+        var filterOrders = this.orderRepository.FilterOrdersByProductPrice_R(from_price, to_price);
+
+        return filterOrders.Select(x => this.orderFactory.MapToOrderDtoForFilters(x));
     }
 
     public async ValueTask<OrderDto> DeleteOrdersAsync(Guid orderId)
@@ -164,5 +167,5 @@ public partial class OrderServices : IOrderServices
 
         return this.orderFactory
             .MapToOrderDto(removedOrder);
-    }
+    }    
 }

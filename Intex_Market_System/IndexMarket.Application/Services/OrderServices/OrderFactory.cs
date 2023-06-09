@@ -1,5 +1,6 @@
 ﻿using IndexMarket.Application.DataTransferObject;
 using IndexMarket.Domain.Entities;
+using IndexMarket.Infrastructure.Repository.OrdersRepositories;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 
 namespace IndexMarket.Application.Services;
@@ -29,5 +30,30 @@ public class OrderFactory : IOrderFactory
                 newOrder.User.Address.Street,
                 newOrder.User.Address.PostalCode),
             newOrder.CreatedAt);
+    }
+    public OrderDto MapToOrderDtoForFilters(filter_products_price_in_order_model filter_order)
+    {
+        string? weight = string.Empty;
+        if (filter_order.weight != null)
+            weight = $" x {filter_order.weight}";
+
+        return new OrderDto(
+            filter_order.order_id,
+            filter_order.user_name,
+            new FileDto(
+                filter_order.file_id,
+                filter_order.file_type,
+                filter_order.file_name),
+            filter_order.phone_number,
+            $"{filter_order.height}{weight}/{filter_order.depth}",
+            filter_order.price,
+            new AddressDto(
+                filter_order.address_id,
+                filter_order.country,
+                filter_order.city,
+                filter_order.region,
+                filter_order.street,
+                filter_order.postal_code),
+            filter_order.create_at);
     }
 }
