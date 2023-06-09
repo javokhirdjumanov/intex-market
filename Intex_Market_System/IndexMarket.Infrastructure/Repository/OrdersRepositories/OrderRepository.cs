@@ -13,9 +13,8 @@ public class OrderRepository
         this.appDbContext = appDbContext;
     }
 
-    public IQueryable<filter_products_price_in_order_model>
-        FilterOrdersByProductPrice_R(decimal? from_price, decimal? to_price)
-    {
-        return this.appDbContext.Filter_Orders_By_Product_Price(from_price, to_price);
-    }
+    public IQueryable<filter_products_price_in_order_model> FilterOrdersByProductPrice_R(
+        decimal? from_price,
+        decimal? to_price)
+        => this.appDbContext.FilterOrdersByProductPrice(from_price, to_price);
 }
