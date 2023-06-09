@@ -146,6 +146,13 @@ public partial class OrderServices : IOrderServices
         return filterOrders.Select(x => this.orderFactory.MapToOrderDtoForFilters(x));
     }
 
+    public IQueryable<OrderDto> FilterOrdersByCreateAt(DateOnly from_date, DateOnly to_date)
+    {
+        var filterOrders = this.orderRepository.FilterOrdersByCreateAt_R(from_date, to_date);
+
+        return filterOrders.Select(x => this.orderFactory.MapToOrderDtoForFilters(x));
+    }
+
     public async ValueTask<OrderDto> DeleteOrdersAsync(Guid orderId)
     {
         orderId.IsDefault();
