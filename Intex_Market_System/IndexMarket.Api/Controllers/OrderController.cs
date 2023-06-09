@@ -45,6 +45,14 @@ public class OrderController : ControllerBase
         return Ok(orders);
     }
 
+    [HttpGet("form_price to_price")]
+    public IActionResult FilterOrdersByProductPrice(decimal? from_price, decimal? to_price)
+    {
+        var filterOrders = this.orderServices.FilterOrdersByProductPrice_S(from_price, to_price);
+
+        return Ok(filterOrders);
+    }
+
     [HttpDelete("{orderId:guid}")]
     public async ValueTask<ActionResult<OrderDto>> DeleteOrderAsync(Guid orderId)
     {
