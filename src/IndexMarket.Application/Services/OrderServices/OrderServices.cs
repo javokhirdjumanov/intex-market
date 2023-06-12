@@ -174,5 +174,16 @@ public partial class OrderServices : IOrderServices
 
         return this.orderFactory
             .MapToOrderDto(removedOrder);
-    }    
+    }
+
+    public IQueryable<OrderReportDto> ReportOrdersWithQuantity(
+        DateOnly from_date,
+        DateOnly end_date,
+        bool collect_quantity,
+        long? quantity)
+    {
+        var report_Orders = this.orderRepository.ReportOrdersWithQuantity(from_date, end_date, collect_quantity, quantity);
+
+        return report_Orders.Select(x => this.orderFactory.MapToReportDto(x));
+    }
 }

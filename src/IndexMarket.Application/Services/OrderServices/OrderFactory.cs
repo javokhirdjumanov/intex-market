@@ -56,4 +56,12 @@ public class OrderFactory : IOrderFactory
                 filter_order.postal_code),
             filter_order.create_at);
     }
+
+    public OrderReportDto MapToReportDto(report_model model)
+    {
+        return new OrderReportDto(
+            product_id: model.ProductId,
+            category_name: model.CategoryName,
+            quentity: model.Quantity);
+    }
 }

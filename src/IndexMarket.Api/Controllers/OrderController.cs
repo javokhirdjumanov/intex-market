@@ -61,6 +61,14 @@ public class OrderController : ControllerBase
         return Ok(filterOrders);
     }
 
+    [HttpPost("report/orders")]
+    public IActionResult ReportOrders(DateOnly from_date, DateOnly to_date, bool collect_quantity, long? quentity)
+    {
+        var reportOrders = this.orderServices.ReportOrdersWithQuantity(from_date, to_date, collect_quantity, quentity);
+
+        return Ok(reportOrders);
+    }
+
     [HttpDelete("{orderId:guid}")]
     public async ValueTask<ActionResult<OrderDto>> DeleteOrderAsync(Guid orderId)
     {

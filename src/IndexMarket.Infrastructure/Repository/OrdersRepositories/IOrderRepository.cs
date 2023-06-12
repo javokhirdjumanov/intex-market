@@ -12,4 +12,10 @@ public interface IOrderRepository
     IQueryable<filter_products_price_in_order_model> FilterOrdersByCreateAt_R(
         DateOnly from_date,
         DateOnly to_date);
+
+    public IQueryable<report_model> ReportOrdersWithQuantity(
+        DateOnly start_date,
+        DateOnly end_date,
+        bool collect_quantity,
+        long? quantity);
 }

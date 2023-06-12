@@ -22,4 +22,11 @@ public class OrderRepository
         DateOnly from_date,
         DateOnly to_date)
         => this.appDbContext.FilterOrdersByCreatAt(from_date, to_date);
+
+    public IQueryable<report_model> ReportOrdersWithQuantity(
+        DateOnly start_date,
+        DateOnly end_date,
+        bool collect_quantity,
+        long? quantity)
+        => this.appDbContext.ReportOrdersWithQuantity(start_date, end_date, collect_quantity, quantity);
 }

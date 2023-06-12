@@ -7,4 +7,5 @@ public interface IOrderFactory
 {
     OrderDto MapToOrderDto(Order order);
     OrderDto MapToOrderDtoForFilters(filter_products_price_in_order_model model);
+    OrderReportDto MapToReportDto(report_model model);
 }
