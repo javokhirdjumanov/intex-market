@@ -1,4 +1,4 @@
-﻿CREATE or REPLACE function get_report_orders(start_date date, end_date date, is_button boolean, given_quentity bigint default 0)
+﻿CREATE or REPLACE function get_report_orders(start_date date, end_date date, is_button boolean, given_quentity bigint)
 returns table (id uuid, category_name character varying, quentity bigint)
 as $$
 begin
@@ -20,7 +20,7 @@ begin
             else ca."Id" 
         end,
         ca."Title"
-	HAVING COUNT(*) > given_quentity
+	HAVING COUNT(*) > COALESCE(given_quentity, 0)
 	ORDER BY quentity desc;
 end;
 $$ language plpgsql;
