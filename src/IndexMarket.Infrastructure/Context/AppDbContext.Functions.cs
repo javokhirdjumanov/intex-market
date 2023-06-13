@@ -22,7 +22,7 @@ public partial class AppDbContext
         DateOnly to_date)
         => FromExpression(() => FilterOrdersByCreatAt(from_date, to_date));
 
-    [DbFunction("report_orders_with_quantities", Schema = "public")]
+    [DbFunction("get_report_orders", Schema = "public")]
     public IQueryable<report_model> ReportOrdersWithQuantity(
         DateOnly start_date,
         DateOnly end_date,
