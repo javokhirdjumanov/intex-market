@@ -1,60 +1,26 @@
-﻿CREATE OR REPLACE FUNCTION public.report_orders_with_quantities(
-	from_date date,
-	to_date date,
-	collect_quantity BOOLEAN,
-	given_quentity bigint DEFAULT 0)
-RETURNS TABLE (
-	product_id UUID,
-	category_name CHARACTER VARYING,
-	quantity bigint
-)
-LANGUAGE plpgsql
-AS $$
-BEGIN
-	IF collect_quantity THEN
-		RETURN QUERY
-			SELECT 
-				cr."Id" AS product_id,
-				cr."Title" AS category_name,
-				CAST(SUM(subquery.quantity) AS bigint) AS quantity
-			FROM 
-				public."Categories" AS cr
-				INNER JOIN (
-					SELECT 
-						pr."Category_Id",
-						CAST(COUNT(*) AS bigint) AS quantity
-					FROM 
-						public."Orders" AS o
-						INNER JOIN public."Products" AS pr ON o."Product_Id" = pr."Id"
-					WHERE 
-						o."CreatedAt" BETWEEN from_date AND to_date
-					GROUP BY 
-						pr."Category_Id"
-				) AS subquery ON cr."Id" = subquery."Category_Id"
-			GROUP BY 
-				cr."Id",
-				cr."Title"
-			HAVING 
-				CAST(SUM(subquery.quantity) AS bigint) > COALESCE(given_quentity, 0)
-			ORDER BY 
-				CAST(SUM(subquery.quantity) AS bigint) DESC;
-	ELSE
-		RETURN QUERY
-			SELECT 
-				pr."Id" AS product_id,
-				cr."Title" AS category_name,
-				CAST(COUNT(*) AS bigint) AS quantity
-			FROM 
-				public."Orders" AS o
-				INNER JOIN public."Products" AS pr ON o."Product_Id" = pr."Id"
-				INNER JOIN public."Categories" AS cr ON pr."Category_Id" = cr."Id"
-			WHERE 
-				o."CreatedAt" BETWEEN from_date AND to_date
-			GROUP BY 
-				pr."Id",
-				cr."Title"
-			HAVING 
-				COUNT(*) > COALESCE(given_quentity, 0);	
-	END IF;
-END; 
-$$
+﻿CREATE or REPLACE function get_report_orders(start_date date, end_date date, is_button boolean, given_quentity bigint default 0)
+returns table (id uuid, category_name character varying, quentity bigint)
+as $$
+begin
+    return query
+    SELECT
+        case 
+            when is_button = false then pr."Id" 
+            else ca."Id" 
+        end as id,
+        ca."Title",
+        COUNT(*) as quentity
+    FROM public."Orders" o
+    inner join public."Products" pr on o."Product_Id" = pr."Id"
+    inner join public."Categories" ca on pr."Category_Id" = ca."Id"
+    where o."CreatedAt" between start_date and end_date
+    GROUP BY 
+        case 
+            when is_button = false then pr."Id"
+            else ca."Id" 
+        end,
+        ca."Title"
+	HAVING COUNT(*) > given_quentity
+	ORDER BY quentity desc;
+end;
+$$ language plpgsql;
