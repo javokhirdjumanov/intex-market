@@ -60,7 +60,7 @@ public class OrderFactory : IOrderFactory
     public OrderReportDto MapToReportDto(report_model model)
     {
         return new OrderReportDto(
-            product_id: model.ProductId,
+            id: model.Id,
             category_name: model.CategoryName,
             quentity: model.Quantity);
     }
